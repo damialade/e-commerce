@@ -94,7 +94,7 @@ const Login = () => {
         setErrMsg("");
         setTimeout(() => {
           setSuccessMsg("");
-          navigate("/");
+          navigate.push("/");
         }, 500);
       })
       .catch((error) => setErrMsg(error.message));

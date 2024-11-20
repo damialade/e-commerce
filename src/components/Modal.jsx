@@ -9,7 +9,7 @@ import "react-toastify/dist/ReactToastify.css";
 toast.configure();
 
 const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
-  const navigate = useHistory();
+  const history = useHistory();
 
   const [cartProducts, setCartProducts] = useState([]);
   const [cell, setCell] = useState(null);
@@ -44,7 +44,7 @@ const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
     });
 
     hideModal();
-    navigate("/");
+    history.push("/");
     toast.success("Your order has been placed successfully", {
       position: "top-right",
       autoClose: 5000,

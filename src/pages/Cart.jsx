@@ -199,7 +199,7 @@ const Cart = () => {
         PaymentMethod: "Stripe/Card",
       });
       await deleteCart();
-      navigate("/");
+      navigate.push("/");
       toast.success("Your order has been placed successfully", {
         position: "top-right",
         autoClose: 5000,

@@ -79,7 +79,7 @@ const ProductsLists = () => {
           console.log("successfully added to wishlist");
         });
     } else {
-      navigate("/login");
+      navigate.push("/login");
     }
   };
 

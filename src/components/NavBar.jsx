@@ -119,7 +119,7 @@ const NavBar = () => {
   const handleLogout = () => {
     auth.signOut().then(() => {
       localStorage.removeItem("userId");
-      navigate("/login");
+      navigate.push("/login");
     });
   };
 

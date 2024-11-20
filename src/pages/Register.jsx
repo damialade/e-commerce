@@ -103,7 +103,7 @@ const Register = () => {
             setErrMsg("");
             setTimeout(() => {
               setSuccessMsg("");
-              navigate("/login");
+              navigate.push("/login");
             }, 500);
           })
           .catch((error) => setErrMsg(error.message));

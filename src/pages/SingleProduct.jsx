@@ -159,7 +159,7 @@ const SingleProduct = () => {
         .set(Product)
         .then(() => {});
     } else {
-      navigate("/login");
+      navigate.push("/login");
     }
   };
 
@@ -179,7 +179,7 @@ const SingleProduct = () => {
       title: prod.title,
       color: prod.color,
     });
-    navigate("/cart");
+    navigate.push("/cart");
   };
 
   return (
