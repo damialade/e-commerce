@@ -10,8 +10,7 @@ import CartProducts from "../components/CartProducts";
 import StripeCheckout from "react-stripe-checkout";
 import { Link } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router";
-
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Modal from "../components/Modal";
@@ -167,7 +166,7 @@ const Cart = () => {
 
   //charging payment
 
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   let localId = localStorage.getItem("userId");
 

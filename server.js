@@ -11,7 +11,7 @@ const path = require("path");
 
 const port = process.env.PORT || 8080;
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV === "development") {
   app.use(express.static("build"));
   app.get("*", (req, res) => {
     res.sendFile(path.resolve(__dirname, "build", "index.html"));
@@ -23,7 +23,7 @@ app.use(cors());
 app.use(express.json());
 
 app.get("/", (req, res) => {
-  res.send("Welcome to our E-commerce Store");
+  res.send("Welcome to Tiannah E-commerce Store");
 });
 
 app.post("/checkout", async (req, res) => {

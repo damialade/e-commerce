@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
 import { auth } from "./firebase";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -79,7 +79,7 @@ const Agreement = styled.span`
 `;
 
 const Login = () => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const handleLogin = (e) => {
     e.preventDefault();

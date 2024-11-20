@@ -2,15 +2,14 @@ import { useState, useEffect } from "react";
 import { auth, fs } from "../pages/firebase";
 import "./modal.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { useNavigate } from "react-router";
-
+import { useHistory } from "react-router-dom";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 toast.configure();
 
 const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const [cartProducts, setCartProducts] = useState([]);
   const [cell, setCell] = useState(null);

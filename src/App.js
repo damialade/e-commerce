@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import ProductsLists from "./pages/ProductsLists";
 import SingleProduct from "./pages/SingleProduct";
@@ -15,21 +15,23 @@ import OrderDetails from "./components/OrderDetails";
 const App = () => {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route exact path="/" element={<HomePage />} />
-        <Route path="*" element={<NotFound />} />
-        <Route path="/products" element={<ProductsLists />} />
-        <Route path="/product/:productId" element={<SingleProduct />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/cart" element={<Cart />} />
-        <Route path="/wishlist" element={<Wishlist />} />
-        <Route path="/account" element={<MyAccount />} />
-        <Route path="/orderDetails/:orderId" element={<OrderDetails />} />
-        <Route path="/add-product" element={<AddProduct />} />
-        <Route path="/category/:category" element={<SelectedCategory />} />
-      </Routes>
+      <Switch>
+        <Route path="/" exact component={HomePage} />
+        <Route path="/products" exact component={ProductsLists} />
+        <Route path="/product/:productId" exact component={SingleProduct} />
+        <Route path="/register" exact component={Register} />
+        <Route path="/login" exact component={Login} />
+        <Route path="/cart" exact component={Cart} />
+        <Route path="/wishlist" exact component={Wishlist} />
+        <Route path="/account" exact component={MyAccount} />
+        <Route path="/orderDetails/:orderId" exact component={OrderDetails} />
+        <Route path="/add-product" exact component={AddProduct} />
+        <Route path="/category/:category" exact component={SelectedCategory} />
+        {/* Catch-all route for 404 */}
+        <Route component={NotFound} />
+      </Switch>
     </BrowserRouter>
   );
 };
+
 export default App;

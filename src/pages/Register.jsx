@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
 import { auth, fs } from "./firebase";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   width: 100vw;
@@ -77,7 +77,7 @@ const Button = styled.button`
 `;
 
 const Register = () => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const handleRegister = (e) => {
     e.preventDefault();

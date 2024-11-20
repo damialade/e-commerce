@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { mobile } from "../responsive";
 import { Link } from "react-router-dom";
 import { auth, fs } from "../pages/firebase";
-import { useNavigate } from "react-router";
+import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   height: 80px;
@@ -74,7 +74,7 @@ const MenuItem = styled.div`
 `;
 
 const NavBar = () => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   //getting current user id
 

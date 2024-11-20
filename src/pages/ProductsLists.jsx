@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { fs } from "./firebase";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import Information from "../components/Information";
@@ -11,7 +11,7 @@ import CopyRight from "../components/CopyRight";
 import { mobile } from "../responsive";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Link } from "react-router-dom";
- 
+
 const Container = styled.div``;
 
 const Title = styled.h2`
@@ -35,7 +35,7 @@ const FilterText = styled.p`
 `;
 
 const ProductsLists = () => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   //retrieving all products from firebase
   const [products, setProducts] = useState([]);
@@ -71,10 +71,13 @@ const ProductsLists = () => {
     if (uid !== null) {
       //console.log(product);
       Wishlist = product;
-      Wishlist['qty'] = 1;
-      fs.collection('WishList' + uid).doc(product.ID).set(Wishlist).then(() => {
-        console.log('successfully added to wishlist');
-      })
+      Wishlist["qty"] = 1;
+      fs.collection("WishList" + uid)
+        .doc(product.ID)
+        .set(Wishlist)
+        .then(() => {
+          console.log("successfully added to wishlist");
+        });
     } else {
       navigate("/login");
     }

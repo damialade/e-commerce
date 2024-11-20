@@ -6,8 +6,8 @@ import NewsLetter from "../components/NewsLetter";
 import Footer from "../components/Footer";
 import CopyRight from "../components/CopyRight";
 import { mobile } from "../responsive";
-import {  fs } from "./firebase";
-import { useNavigate, useParams } from "react-router-dom";
+import { fs } from "./firebase";
+import { useHistory, useParams } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -108,7 +108,7 @@ const Button = styled.button`
 `;
 
 const SingleProduct = () => {
-  const navigate = useNavigate();
+  const navigate = useHistory();
 
   const params = useParams();
   const { productId } = params;
