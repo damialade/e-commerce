@@ -6,7 +6,7 @@
     "@babel/preset-react": "^7.25.9",
     "@emotion/react": "^11.13.5",
     "@emotion/styled": "^11.13.5",
-    "@mui/icons-material": "^5.2.0",
+    "@mui/icons-material": "^6.1.8",
     "@mui/material": "^6.1.8",
     "@mui/system": "^6.1.8",
     "@stripe/react-stripe-js": "^1.4.1",
