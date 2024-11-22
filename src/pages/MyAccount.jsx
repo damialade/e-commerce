@@ -5,7 +5,6 @@ import Footer from "../components/Footer";
 import { fs, auth } from "./firebase";
 import CopyRight from "../components/CopyRight";
 import styled from "styled-components";
-import { Table, Tr } from "styled-table-component";
 import NewsLetter from "../components/NewsLetter";
 import { Link, useHistory } from "react-router-dom";
 

@@ -30,8 +30,7 @@
     "react-stripe-checkout": "^2.6.3",
     "react-toastify": "^6.0.8",
     "stripe": "^8.131.1",
-    "styled-base-components": "^4.0.0",
-    "styled-components": "^4.1.2",
+    "styled-components": "^4.4.1",
     "web-vitals": "^1.1.2"
   },
   "proxy": "http://localhost:8080",
