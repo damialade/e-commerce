@@ -80,19 +80,19 @@ const MyAccount = () => {
       <Information />
       <Wrapper>
         {orders.length > 0 ? (
-          <Table>
+          <table>
             <thead>
-              <Tr>
+              <tr>
                 <th scope="col">S/N</th>
                 <th scope="col">Order Id</th>
                 <th scope="col">Order Total</th>
                 <th scope="col">Total Quantity</th>
                 <th scope="col">Actions</th>
-              </Tr>
+              </tr>
             </thead>
             <tbody>
               {orders.map((orderData, index) => (
-                <Tr active key={orderData.id}>
+                <tr active key={orderData.id}>
                   <td>{index + 1}</td> {/* Use index for serial number */}
                   <td>{orderData.id}</td>
                   <td>${orderData.OrderPrice}</td>
@@ -102,10 +102,10 @@ const MyAccount = () => {
                       <button>View Items</button>
                     </Link>
                   </td>
-                </Tr>
+                </tr>
               ))}
             </tbody>
-          </Table>
+          </table>
         ) : (
           <p>
             You have never placed an Order. Click{" "}
