@@ -78,7 +78,7 @@ const Hr = styled.hr`
 
 const IndividualCartProduct = ({ cartProduct }) => {
   const decreaseQuantity = (ProdID, ProdQuantity) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (uid) {
       if (ProdQuantity > 1) {
@@ -96,7 +96,7 @@ const IndividualCartProduct = ({ cartProduct }) => {
   };
 
   const increaseQuantity = (ProdID, ProdQuantity) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
     if (uid) {
       if (ProdQuantity < 10) {
         fs.collection("Cart")
@@ -111,7 +111,7 @@ const IndividualCartProduct = ({ cartProduct }) => {
   };
 
   const deleteProduct = (ProdID) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (uid) {
       fs.collection("Cart").doc(uid).collection("Items").doc(ProdID).delete();

@@ -79,7 +79,7 @@ const MyAccount = () => {
       <NavBar />
       <Information />
       <Wrapper>
-        {orders?.length > 0 ? (
+        {orders.length > 0 ? (
           <Table>
             <thead>
               <Tr>

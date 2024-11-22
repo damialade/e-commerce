@@ -115,13 +115,13 @@ const Wishlist = () => {
             <TopButton>CONTINUE SHOPPING</TopButton>
           </Link>
           <TopTexts>
-            {wishlistProducts?.length > 0 && (
-              <TopText>Wishlist ({wishlistProducts?.length})</TopText>
+            {wishlistProducts.length > 0 && (
+              <TopText>Wishlist ({wishlistProducts.length})</TopText>
             )}
           </TopTexts>
         </Top>
 
-        {wishlistProducts?.length < 1 && <Info>No Products in Wishlist</Info>}
+        {wishlistProducts.length < 1 && <Info>No Products in Wishlist</Info>}
 
         <Bottom>
           <Info>

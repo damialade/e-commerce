@@ -88,7 +88,7 @@ const Icon = styled.div`
 
 const IndividualWishlistProduct = ({ wishlistProduct }) => {
   const deleteProduct = (ProdID) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (uid) {
       fs.collection("Wishlist")

@@ -68,7 +68,7 @@ const ProductsLists = () => {
   const navigate = useHistory();
 
   const addToFavorite = (product) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (uid && uid !== "null") {
       const wishlistItem = { ...product, qty: 1 };

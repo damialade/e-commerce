@@ -138,7 +138,7 @@ const SingleProduct = () => {
     }
   };
 
-  const prod = product?.find((prd) => {
+  const prod = product.find((prd) => {
     return prd.ID === productId;
   });
 
@@ -152,7 +152,7 @@ const SingleProduct = () => {
 
   //passing addTo Cart props
   const addToCart = (item) => {
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (uid) {
       item["TotalProductPrice"] = item.quantity * item.price;
@@ -182,7 +182,7 @@ const SingleProduct = () => {
     const selectedSize = sizeRef.current.value;
     const selectedQuantity = quantityRef.current.value;
 
-    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
 
     if (!uid) {
       toast.error("You need to log in first.");
@@ -221,17 +221,17 @@ const SingleProduct = () => {
       <Wrapper>
         <ToastContainer />
         <ImgContainer>
-          <Image src={prod?.url} />
+          <Image src={prod.url} />
         </ImgContainer>
         <InfoContainer>
           <form onSubmit={handleAddToCart}>
-            <Title>{prod?.title} </Title>
-            <Description>{prod?.desc} </Description>
-            <Price>${prod?.price} </Price>
+            <Title>{prod.title} </Title>
+            <Description>{prod.desc} </Description>
+            <Price>${prod.price} </Price>
             <FilterContainer>
               <Filter>
                 <FilterTitle>Color</FilterTitle>
-                <FilterColor color={prod?.color} />
+                <FilterColor color={prod.color} />
               </Filter>
               <Filter>
                 <FilterTitle>Size</FilterTitle>

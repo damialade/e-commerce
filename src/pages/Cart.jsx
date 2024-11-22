@@ -158,7 +158,7 @@ const Cart = () => {
   // getting TotalProductPrice from cart product in a separate array
 
   let TotalProductPrice = 0;
-  cartProducts?.forEach((cartProduct) => {
+  cartProducts.forEach((cartProduct) => {
     TotalProductPrice =
       TotalProductPrice + cartProduct.price * cartProduct.quantity;
   });
@@ -192,7 +192,7 @@ const Cart = () => {
       let { success, message } = response.data;
 
       if (success) {
-        const uid = auth.currentUser?.uid; // Ensure user is authenticated
+        const uid = auth.currentUser.uid; // Ensure user is authenticated
 
         if (!uid) {
           console.error("User is not authenticated. Please login again.");
@@ -244,7 +244,7 @@ const Cart = () => {
     } catch (err) {
       console.error("Error in checkout:", err);
       const errorMessage =
-        err.response?.data?.message ||
+        err.response.data.message ||
         "An unexpected error occurred. Please try again.";
       toast.error(errorMessage, {
         position: "top-right",

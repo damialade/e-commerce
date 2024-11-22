@@ -56,7 +56,7 @@ const OrderDetails = () => {
     fetchOrderDetails();
   }, [fetchOrderDetails]);
 
-  const ItemsArray = order?.OrderItems;
+  const ItemsArray = order.OrderItems;
 
   if (loading) {
     return <LoadingSpinner />;
@@ -97,7 +97,7 @@ const OrderDetails = () => {
             <OrderItem key={index} individualProduct={orderItemData} />
           ))}
       </Wrapper>
-      {!ItemsArray?.length && (
+      {!ItemsArray.length && (
         <p style={{ textAlign: "center" }}>No items found in this order.</p>
       )}
     </Container>
