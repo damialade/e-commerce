@@ -4,13 +4,13 @@ import "firebase/firestore";
 import "firebase/storage";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAX8qS2pcMktQ-ReZAfGjbwQqFF9LLToR4",
-  authDomain: "tiannah-e-commerce.firebaseapp.com",
-  projectId: "tiannah-e-commerce",
-  storageBucket: "tiannah-e-commerce.appspot.com",
-  messagingSenderId: "201332941124",
-  appId: "1:201332941124:web:653c223fd76481753e7711",
-  measurementId: "G-WNE2BX5VG8",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
 
 firebase.initializeApp(firebaseConfig);
