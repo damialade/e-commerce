@@ -40,7 +40,6 @@ const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
     });
     cartProducts?.forEach((cartProduct) => {
       fs.collection(`Cart${uid}`).doc(cartProduct.ID).delete();
-      console.log("deleted");
     });
 
     hideModal();

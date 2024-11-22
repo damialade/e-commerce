@@ -9,6 +9,10 @@ import CopyRight from "../components/CopyRight";
 import LoadingSpinner from "../components/LoadingSpinner";
 import IndividualProduct from "../components/IndividualProduct";
 import { useParams, useHistory } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 
 const Container = styled.div``;
 
@@ -69,10 +73,11 @@ const SelectedCategory = () => {
         .doc(product.ID)
         .set(Wishlist)
         .then(() => {
-          console.log("Successfully added to wishlist");
+          toast.success("Successfully added to wishlist");
         })
         .catch((error) => {
           console.log("Error adding to wishlist:", error);
+          toast.error("Error encountered adding to wishlist");
         });
     }
   };
@@ -83,6 +88,7 @@ const SelectedCategory = () => {
       <Information />
       <Title> {category} </Title>
       <Wrapper>
+        <ToastContainer />
         {selectedCategory.map((individualProduct) => (
           <IndividualProduct
             key={individualProduct}

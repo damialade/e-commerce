@@ -85,7 +85,6 @@ const Register = () => {
     auth
       .createUserWithEmailAndPassword(email, password)
       .then((credentials) => {
-        console.log(credentials);
         fs.collection("users")
           .doc(credentials.user.uid)
           .set({
