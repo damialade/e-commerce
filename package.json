@@ -34,7 +34,6 @@
     "styled-table-component": "^4.0.0",
     "web-vitals": "^1.1.2"
   },
-  "homepage": "http://localhost:3000/",
   "proxy": "http://localhost:8080",
   "scripts": {
     "start-client": "react-scripts start",
