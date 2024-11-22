@@ -36,7 +36,7 @@ const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
       OrderQuantity: cartQty,
       UserId: uid,
       OrderItems: cartProducts,
-      PaymentMethod: "Cash on Delivery",
+      PaymentMethod: "Free Delivery",
     });
     cartProducts?.forEach((cartProduct) => {
       fs.collection(`Cart${uid}`).doc(cartProduct.ID).delete();

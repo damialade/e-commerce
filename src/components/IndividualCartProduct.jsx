@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Add, Remove, DeleteForever } from "@mui/icons-material";
 import { mobile } from "../responsive";
-import { fs } from "../pages/firebase";
+import { fs, auth } from "../pages/firebase";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -39,8 +39,8 @@ const Details = styled.div`
 const ProductName = styled.span``;
 const ProductDesc = styled.span``;
 const ProductColor = styled.div`
-  width: 20px;
-  height: 20px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background-color: ${(props) => props.color};
 `;
@@ -59,9 +59,9 @@ const ProductAmountContainer = styled.div`
   margin-bottom: 20px;
 `;
 const ProductAmount = styled.div`
-  font-size: 24px;
+  font-size: 20px;
   margin: 5px;
-  ${mobile({ margin: "5px 15px" })};
+  ${mobile({ margin: "5px 25px" })};
 `;
 const ProductPrice = styled.div`
   font-size: 30px;
@@ -77,33 +77,45 @@ const Hr = styled.hr`
 `;
 
 const IndividualCartProduct = ({ cartProduct }) => {
-  let localId = localStorage.getItem("userId");
-
-  // console.log(localId);
-
   const decreaseQuantity = (ProdID, ProdQuantity) => {
-    if (ProdQuantity > 1) {
-      fs.collection(`Cart${localId}`)
-        .doc(ProdID)
-        .update({
-          quantity: ProdQuantity - 1,
-        });
-    } else {
-      fs.collection(`Cart${localId}`).doc(ProdID).delete();
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (uid) {
+      if (ProdQuantity > 1) {
+        fs.collection("Cart")
+          .doc(uid)
+          .collection("Items")
+          .doc(ProdID)
+          .update({
+            quantity: ProdQuantity - 1,
+          });
+      } else {
+        fs.collection(`Cart${uid}/Items`).doc(ProdID).delete();
+      }
     }
   };
+
   const increaseQuantity = (ProdID, ProdQuantity) => {
-    if (ProdQuantity < 10) {
-      fs.collection(`Cart${localId}`)
-        .doc(ProdID)
-        .update({
-          quantity: ProdQuantity + 1,
-        });
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+    if (uid) {
+      if (ProdQuantity < 10) {
+        fs.collection("Cart")
+          .doc(uid)
+          .collection("Items")
+          .doc(ProdID)
+          .update({
+            quantity: ProdQuantity + 1,
+          });
+      }
     }
   };
 
   const deleteProduct = (ProdID) => {
-    fs.collection(`Cart${localId}`).doc(ProdID).delete();
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (uid) {
+      fs.collection("Cart").doc(uid).collection("Items").doc(ProdID).delete();
+    }
   };
 
   return (
@@ -129,21 +141,25 @@ const IndividualCartProduct = ({ cartProduct }) => {
               </ProductDetail>
               <PriceDetail>
                 <ProductAmountContainer>
-                  <Add
-                    onClick={() => {
-                      increaseQuantity(cartProduct.ID, cartProduct.quantity);
-                    }}
-                  />
-                  <ProductAmount>{cartProduct.quantity}</ProductAmount>
                   <Remove
                     onClick={() => {
                       decreaseQuantity(cartProduct.ID, cartProduct.quantity);
                     }}
+                    style={{ cursor: "pointer" }}
+                  />
+
+                  <ProductAmount>{cartProduct.quantity}</ProductAmount>
+                  <Add
+                    onClick={() => {
+                      increaseQuantity(cartProduct.ID, cartProduct.quantity);
+                    }}
+                    style={{ cursor: "pointer" }}
                   />
                   <DeleteForever
                     onClick={() => {
                       deleteProduct(cartProduct.ID);
                     }}
+                    style={{ cursor: "pointer" }}
                   />
                 </ProductAmountContainer>
                 <ProductPrice>

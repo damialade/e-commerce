@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { mobile } from "../responsive";
 import { storage, fs } from "./firebase";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const Container = styled.div`
   width: 100vw;
@@ -27,15 +30,6 @@ const Wrapper = styled.div`
 const Title = styled.h2`
   font-size: 24px;
   font-weight: 300;
-`;
-
-const GreenLine = styled.p`
-  display: flex;
-  align-items: center;
-  width: 25vw;
-  height: 10%;
-  color: #85fba8;
-  margin: 10px;
 `;
 
 const Form = styled.form`
@@ -96,7 +90,6 @@ const AddProduct = () => {
   const [imageError, setImageError] = useState("");
 
   const [uploadError, setUploadError] = useState("");
-  const [successMsg, setSuccessMsg] = useState("");
 
   const types = ["image/jpg", "image/jpeg", "image/png", "image/PNG"];
   const handleProductUpload = (e) => {
@@ -121,11 +114,10 @@ const AddProduct = () => {
     const uploadTask = storage.ref(`product-images/${image.name}`).put(image);
     uploadTask.on(
       "state-changed",
-      (snapshot) => {
-        const progress =
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log(progress);
-      },
+      // (snapshot) => {
+      //   const progress =
+      //     (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      // },
       (error) => setUploadError(error.message),
       () => {
         storage
@@ -143,7 +135,6 @@ const AddProduct = () => {
                 url,
               })
               .then(() => {
-                setSuccessMsg("Product added successfully");
                 setTitle("");
                 setDesc("");
                 setPrice("");
@@ -153,7 +144,7 @@ const AddProduct = () => {
                 setImageError("");
                 setUploadError("");
                 setTimeout(() => {
-                  setSuccessMsg("");
+                  toast.success("Product added successfully");
                 }, 500);
               })
               .catch((error) => setUploadError(error.message));
@@ -172,12 +163,8 @@ const AddProduct = () => {
   return (
     <Container>
       <Wrapper>
+        <ToastContainer />
         <Title>ADD PRODUCTS</Title>
-        {successMsg && (
-          <>
-            <GreenLine>{successMsg}</GreenLine>
-          </>
-        )}
 
         <Form autoComplete="off" onSubmit={handleProductSubmit}>
           <Input

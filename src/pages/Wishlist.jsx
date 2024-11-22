@@ -5,10 +5,9 @@ import Information from "../components/Information";
 import Footer from "../components/Footer";
 import CopyRight from "../components/CopyRight";
 import { mobile } from "../responsive";
-import { auth, fs } from "./firebase";
-import WishlistProducts from "../components/WishlistProducts"
+import { fs, auth } from "./firebase";
+import WishlistProducts from "../components/WishlistProducts";
 import { Link } from "react-router-dom";
-
 
 const Container = styled.div`
   overflow: hidden;
@@ -79,25 +78,22 @@ const Hr = styled.hr`
   margin: 10px;
 `;
 
-
 const Wishlist = () => {
-  //state of cart products
   const [wishlistProducts, setWishListProducts] = useState([]);
- 
-
-  //getting wishlist products from firestore collection and updating state of wishlist
-  const uid = localStorage.getItem('userId');
+  const uid = localStorage.getItem("userId");
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("WishList" + uid).onSnapshot((snapshot) => {
-          const newWishListProduct = snapshot.docs.map((doc) => ({
-            ID: doc.id,
-            ...doc.data(),
-          }));
-          setWishListProducts(newWishListProduct);
-          
-        });
+        fs.collection("Wishlist")
+          .doc(uid)
+          .collection("Items")
+          .onSnapshot((snapshot) => {
+            const newWishListProduct = snapshot.docs.map((doc) => ({
+              ID: doc.id,
+              ...doc.data(),
+            }));
+            setWishListProducts(newWishListProduct);
+          });
       } else {
         console.log("user is not signed in");
       }
@@ -107,8 +103,6 @@ const Wishlist = () => {
       behavior: "smooth",
     });
   }, [uid]);
-
-  
 
   return (
     <Container>
@@ -121,13 +115,13 @@ const Wishlist = () => {
             <TopButton>CONTINUE SHOPPING</TopButton>
           </Link>
           <TopTexts>
-            {wishlistProducts.length > 0 && (
-              <TopText>Wishlist ({wishlistProducts.length})</TopText>
+            {wishlistProducts?.length > 0 && (
+              <TopText>Wishlist ({wishlistProducts?.length})</TopText>
             )}
           </TopTexts>
         </Top>
 
-        {wishlistProducts.length < 1 && <Info>No Products in Wishlist</Info>}
+        {wishlistProducts?.length < 1 && <Info>No Products in Wishlist</Info>}
 
         <Bottom>
           <Info>

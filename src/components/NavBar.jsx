@@ -23,30 +23,6 @@ const Wrapper = styled.div`
   ${mobile({ padding: "10px 0" })}
 `;
 
-// const Left = styled.div`
-//   display: flex;
-//   flex: 1;
-//   align-items: center;
-// `;
-// const Language = styled.span`
-//   cursor: pointer;
-//   font-size: 14px;
-//   ${mobile({ display: "none" })}
-// `;
-// const SearchBar = styled.div`
-//   border: 0.5px solid lightgray;
-//   display: flex;
-//   align-items: center;
-//   margin: 25px;
-//   padding: 5px;
-//   ${mobile({ margin: "18px" })}
-// `;
-// const Input = styled.input`
-//   outline: none;
-//   border: none;
-//   ${mobile({ width: "50px" })}
-// `;
-
 const Logo = styled.h1`
   font-weight: bold;
   ${mobile({ fontSize: "24px" })}
@@ -167,23 +143,24 @@ const NavBar = () => {
   return (
     <Container>
       <Wrapper>
-        {/* <Left>
-          <Language>EN</Language>
-          <SearchBar>
-            <Input placeholder="Search" />
-            <Search style={{ color: "gray", fontSize: 16 }} onClick={searchButtonHandler}/>
-          </SearchBar>
-        </Left> */}
         <Center>
-          <Logo>Tiannah.</Logo>
+          <Link to="/" style={{ textDecoration: "none", color: "#000" }}>
+            <Logo>Tiannah.</Logo>
+          </Link>
         </Center>
         <Right>
           {user && (
             <>
-              <Link to="/" style={{ textDecoration: "none", color: "grey" }}>
+              <div style={{ textDecoration: "none", color: "grey" }}>
                 <MenuItem>{user}</MenuItem>
-              </Link>
+              </div>
 
+              <Link
+                to="/account"
+                style={{ textDecoration: "none", color: "grey" }}
+              >
+                <MenuItem>My Account</MenuItem>
+              </Link>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
 
               {wishlistProducts.length > 0 && (

@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { DeleteForever } from "@mui/icons-material";
 import { mobile } from "../responsive";
-import { fs } from "../pages/firebase";
+import { fs, auth } from "../pages/firebase";
+import { Link } from "react-router-dom";
+import { ShoppingCartOutlined } from "@mui/icons-material";
 
 const Container = styled.div``;
 const Wrapper = styled.div`
@@ -57,7 +59,6 @@ const ProductAmountContainer = styled.div`
   display: flex;
   align-items: center;
   margin-bottom: 20px;
-  
 `;
 
 const Hr = styled.hr`
@@ -67,13 +68,35 @@ const Hr = styled.hr`
   margin: 10px;
 `;
 
+const Icon = styled.div`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 10px;
+  transition: 0.5s ease;
+
+  &:hover {
+    background-color: #e9f5f5;
+    transform: scale(1.1);
+  }
+`;
+
 const IndividualWishlistProduct = ({ wishlistProduct }) => {
-  let localId = localStorage.getItem("userId");
-
-  // console.log(localId);
-
   const deleteProduct = (ProdID) => {
-    fs.collection(`WishList${localId}`).doc(ProdID).delete();
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (uid) {
+      fs.collection("Wishlist")
+        .doc(uid)
+        .collection("Items")
+        .doc(ProdID)
+        .delete();
+    }
   };
 
   return (
@@ -100,7 +123,13 @@ const IndividualWishlistProduct = ({ wishlistProduct }) => {
                     onClick={() => {
                       deleteProduct(wishlistProduct.ID);
                     }}
+                    style={{ cursor: "pointer" }}
                   />
+                  <Link to={`/product/${wishlistProduct.ID}`}>
+                    <Icon>
+                      <ShoppingCartOutlined />
+                    </Icon>
+                  </Link>
                 </ProductAmountContainer>
               </PriceDetail>
             </Product>

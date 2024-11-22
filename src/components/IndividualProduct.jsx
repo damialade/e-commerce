@@ -53,7 +53,7 @@ const Icon = styled.div`
   justify-content: center;
   margin: 10px;
   transition: 0.5s ease;
- 
+
   &:hover {
     background-color: #e9f5f5;
     transform: scale(1.1);
@@ -76,10 +76,9 @@ const Price = styled.p`
 `;
 
 const IndividualProduct = ({ individualProduct, addToFavorite }) => {
-  
   const handleWish = () => {
     addToFavorite(individualProduct);
-   }
+  };
   return (
     <Container>
       <Image src={individualProduct.url} />
@@ -90,11 +89,9 @@ const IndividualProduct = ({ individualProduct, addToFavorite }) => {
           </Icon>
         </Link>
 
-        <Link to= '/wishlist'>
         <Icon>
-            <FavoriteBorderOutlined onClick={handleWish}/>
-          </Icon>
-          </Link>
+          <FavoriteBorderOutlined onClick={handleWish} />
+        </Icon>
       </Info>
       <Wrapper>
         <Title>{individualProduct.title}</Title>

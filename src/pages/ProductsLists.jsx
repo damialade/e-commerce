@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fs } from "./firebase";
+import { fs, auth } from "./firebase";
 import { useHistory } from "react-router-dom";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
@@ -11,6 +11,10 @@ import CopyRight from "../components/CopyRight";
 import { mobile } from "../responsive";
 import LoadingSpinner from "../components/LoadingSpinner";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 
 const Container = styled.div``;
 
@@ -35,8 +39,6 @@ const FilterText = styled.p`
 `;
 
 const ProductsLists = () => {
-  const navigate = useHistory();
-
   //retrieving all products from firebase
   const [products, setProducts] = useState([]);
 
@@ -54,7 +56,6 @@ const ProductsLists = () => {
       }
     }
   };
-  //console.log(products);
 
   useEffect(() => {
     getAllProducts();
@@ -64,21 +65,32 @@ const ProductsLists = () => {
     });
   }, []);
 
-  const uid = localStorage.getItem("userId");
+  const navigate = useHistory();
 
-  let Wishlist;
   const addToFavorite = (product) => {
-    if (uid !== null) {
-      //console.log(product);
-      Wishlist = product;
-      Wishlist["qty"] = 1;
-      fs.collection("WishList" + uid)
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (uid && uid !== "null") {
+      const wishlistItem = { ...product, qty: 1 };
+
+      fs.collection("Wishlist")
+        .doc(uid)
+        .collection("Items")
         .doc(product.ID)
-        .set(Wishlist)
+        .set(wishlistItem)
         .then(() => {
-          console.log("successfully added to wishlist");
+          toast.success(
+            "Your item has been added successfully to your WishList"
+          );
+        })
+        .catch((error) => {
+          console.error("Error adding item to wishlist:", error);
+          toast.error(
+            "There was an issue adding the product to your WishList."
+          );
         });
     } else {
+      toast.error("Please log in to add items to the WishList.");
       navigate.push("/login");
     }
   };
@@ -94,6 +106,7 @@ const ProductsLists = () => {
     <Container>
       <NavBar />
       <Information />
+      <ToastContainer />
 
       <Title>All Products</Title>
       <FilterContainer>

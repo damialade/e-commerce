@@ -2,37 +2,53 @@ import { useState, useEffect } from "react";
 import NavBar from "../components/NavBar";
 import Information from "../components/Information";
 import Footer from "../components/Footer";
-import { fs } from "./firebase";
+import { fs, auth } from "./firebase";
 import CopyRight from "../components/CopyRight";
 import styled from "styled-components";
 import { Table, Tr } from "styled-table-component";
 import NewsLetter from "../components/NewsLetter";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const Container = styled.div``;
 
 const Wrapper = styled.div`
   overflow-x: auto;
-  margin:10px;
+  margin: 10px;
 `;
 
 const MyAccount = () => {
-  const uid = localStorage.getItem("userId");
-
-  //retrieving all orders from firebase
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const history = useHistory();
+
   const getAllOrders = async () => {
-    const orders = await fs.collection("Orders").get();
-    const ordersArray = [];
-    for (var snap of orders.docs) {
-      var data = snap.data();
-      data.ID = snap.id;
-      ordersArray.push({
-        ...data,
-      });
-      if (ordersArray.length === orders.docs.length) {
-        setOrders(ordersArray);
+    try {
+      const user = auth.currentUser;
+
+      if (!user) {
+        console.error("No user is logged in.");
+        history.push("/login");
+        return;
       }
+
+      const uid = user.uid;
+
+      // Query Firestore for the user's orders
+      const querySnapshot = await fs
+        .collection("Orders")
+        .where("UserId", "==", uid)
+        .get();
+
+      const userOrders = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setOrders(userOrders);
+    } catch (error) {
+      console.error("Error fetching user orders:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -42,18 +58,28 @@ const MyAccount = () => {
       behavior: "smooth",
     });
     getAllOrders();
-  }, []);
+  });
 
-  const selectedOrders = orders.filter((order) => order.UserId === uid);
-
-  let counter = 1;
+  if (loading) {
+    return (
+      <Container>
+        <NavBar />
+        <Information />
+        <Wrapper>
+          <p>Loading your orders...</p>
+        </Wrapper>
+        <Footer />
+        <CopyRight />
+      </Container>
+    );
+  }
 
   return (
     <Container>
       <NavBar />
       <Information />
       <Wrapper>
-        {selectedOrders.length > 0 && (
+        {orders?.length > 0 ? (
           <Table>
             <thead>
               <Tr>
@@ -65,28 +91,31 @@ const MyAccount = () => {
               </Tr>
             </thead>
             <tbody>
-              {selectedOrders.map((orderData) => {
-                return (
-                  <Tr active key={orderData.ID}>
-                    <td>{counter++}</td>
-                    <td>{orderData.ID}</td>
-                    <td>{orderData.OrderPrice}</td>
-                    <td>{orderData.OrderQuantity}</td>
-                    <td>
-                      <Link to={`/orderDetails/${orderData.ID}`}>
-                        <button>View Items</button>
-                      </Link>
-                    </td>
-                  </Tr>
-                );
-              })}
+              {orders.map((orderData, index) => (
+                <Tr active key={orderData.id}>
+                  <td>{index + 1}</td> {/* Use index for serial number */}
+                  <td>{orderData.id}</td>
+                  <td>${orderData.OrderPrice}</td>
+                  <td>{orderData.OrderQuantity}</td>
+                  <td>
+                    <Link to={`/orderDetails/${orderData.id}`}>
+                      <button>View Items</button>
+                    </Link>
+                  </td>
+                </Tr>
+              ))}
             </tbody>
           </Table>
-        )}
-        {selectedOrders.length < 1 && (
+        ) : (
           <p>
             You have never placed an Order. Click{" "}
-            <Link to="/products"  style = {{textDecoration:"none", color:"green"}}> here </Link>to Order
+            <Link
+              to="/products"
+              style={{ textDecoration: "none", color: "green" }}
+            >
+              here
+            </Link>{" "}
+            to Order
           </p>
         )}
       </Wrapper>

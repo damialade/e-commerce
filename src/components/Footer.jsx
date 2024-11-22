@@ -45,7 +45,6 @@ const SocialIcon = styled.div`
 const Center = styled.div`
   flex: 1;
   padding: 20px;
-  
 `;
 const Title = styled.h3`
   margin-bottom: 30px;
@@ -180,7 +179,7 @@ const Footer = () => {
           <MailOutlined style={{ marginRight: "10px" }} />
           tiannah1989@gmail.com
         </ContactItem>
-        <Payment src="https://vynetinvent.com.ng/wp-content/uploads/2019/03/BulkSMSPro-Mastercard-VISA-Verve-Logo-e1552298507841-1.png" />
+        <Payment src="https://printdoctorafrica.com/bookwork/wp-content/uploads/2020/03/Payment.png" />
       </Right>
     </Container>
   );

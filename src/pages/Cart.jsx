@@ -8,12 +8,12 @@ import { mobile } from "../responsive";
 import { auth, fs } from "./firebase";
 import CartProducts from "../components/CartProducts";
 import StripeCheckout from "react-stripe-checkout";
-import { Link } from "react-router-dom";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import { useHistory } from "react-router-dom";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Modal from "../components/Modal";
+// import Modal from "../components/Modal";
 
 toast.configure();
 
@@ -73,9 +73,7 @@ const ProductDetail = styled.div`
   display: flex;
   flex: 2;
 `;
-// const Image = styled.img`
-//   width:200px;
-// `;
+
 const Details = styled.div`
   padding: 20px;
   display: flex;
@@ -95,7 +93,7 @@ const Summary = styled.div`
   border: 0.5px solid lightgray;
   padding: 20px;
   border-radius: 10px;
-  height: 50vh;
+  height: 40vh;
 `;
 
 const SummaryTitle = styled.h2`
@@ -111,13 +109,13 @@ const SummaryItem = styled.div`
 const SummaryItemText = styled.span``;
 const SummaryItemTotal = styled.span``;
 const SummaryItemPrice = styled.span``;
-const Button = styled.button`
-  width: 100%;
-  padding: 10px;
-  background-color: black;
-  color: white;
-  font-weight: 600;
-`;
+// const Button = styled.button`
+//   width: 100%;
+//   padding: 10px;
+//   background-color: black;
+//   color: white;
+//   font-weight: 600;
+// `;
 
 const Cart = () => {
   //state of cart products
@@ -128,13 +126,16 @@ const Cart = () => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("Cart" + uid).onSnapshot((snapshot) => {
-          const newCartProduct = snapshot.docs.map((doc) => ({
-            ID: doc.id,
-            ...doc.data(),
-          }));
-          setCartProducts(newCartProduct);
-        });
+        fs.collection("Cart")
+          .doc(uid)
+          .collection("Items")
+          .onSnapshot((snapshot) => {
+            const newCartProduct = snapshot.docs.map((doc) => ({
+              ID: doc.id,
+              ...doc.data(),
+            }));
+            setCartProducts(newCartProduct);
+          });
       } else {
         console.log("user is not signed in");
       }
@@ -171,36 +172,81 @@ const Cart = () => {
   let localId = localStorage.getItem("userId");
 
   const deleteCart = () => {
-    console.log(`Cart${localId}`);
-    cartProducts?.forEach((cartProduct) => {
+    if (!cartProducts || cartProducts.length === 0) return;
+    cartProducts.forEach((cartProduct) => {
       fs.collection(`Cart${localId}`).doc(cartProduct.ID).delete();
     });
   };
 
   const handleToken = async (token) => {
-    //console.log(token);
-    const cart = { name: "All Products", TotalProductPrice };
-    const response = await axios.post(
-      "https://e-commerce-app-reacthooks.herokuapp.com/checkout",
-      {
-        token,
+    try {
+      // Simplify cart details if external post is not needed
+      const cart = { name: "All Products", TotalProductPrice };
+
+      // Simulate successful response
+      const response = await axios.post("/payment", {
         cart,
-      }
-    );
-    console.log(response);
-    let { status } = response.data;
-    if (status === "success") {
-      const uid = auth.currentUser.uid;
-      await fs.collection("Orders").add({
-        OrderPrice: TotalProductPrice,
-        OrderQuantity: totalQuantity,
-        UserId: uid,
-        OrderItems: cartProducts,
-        PaymentMethod: "Stripe/Card",
+        token,
       });
-      await deleteCart();
-      navigate.push("/");
-      toast.success("Your order has been placed successfully", {
+
+      let { success, message } = response.data;
+
+      if (success) {
+        const uid = auth.currentUser?.uid; // Ensure user is authenticated
+
+        if (!uid) {
+          console.error("User is not authenticated. Please login again.");
+
+          // toast.error("User is not authenticated. Please login again.");
+          navigate.push("/login");
+          return;
+        }
+
+        // Add order to Firestore
+        await fs.collection("Orders").add({
+          OrderPrice: TotalProductPrice,
+          OrderQuantity: totalQuantity,
+          UserId: uid,
+          OrderItems: cartProducts,
+          PaymentMethod: "Stripe/Card",
+        });
+
+        // Clear cart
+        deleteCart();
+
+        // Redirect and notify
+        toast.success("Your order has been placed successfully", {
+          position: "top-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+        });
+        setTimeout(() => {
+          navigate.push("/products");
+        }, 3000);
+      } else {
+        toast.error(
+          message || "Something went wrong during checkout. Please try again.",
+          {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+          }
+        );
+      }
+    } catch (err) {
+      console.error("Error in checkout:", err);
+      const errorMessage =
+        err.response?.data?.message ||
+        "An unexpected error occurred. Please try again.";
+      toast.error(errorMessage, {
         position: "top-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -209,30 +255,29 @@ const Cart = () => {
         draggable: false,
         progress: undefined,
       });
-    } else {
-      alert("Something went wrong in checkout");
     }
   };
 
   //showing modal cash on delivery state
 
-  const [showModal, setShowModal] = useState(false);
+  // const [showModal, setShowModal] = useState(false);
 
   //trigger modal
-  const triggerModal = () => {
-    setShowModal(true);
-  };
+  // const triggerModal = () => {
+  //   setShowModal(true);
+  // };
 
   //hide modal
-  const hideModal = () => {
-    setShowModal(false);
-  };
+  // const hideModal = () => {
+  //   setShowModal(false);
+  // };
 
   return (
     <Container>
       <NavBar />
       <Information />
       <Wrapper>
+        <ToastContainer />
         <Title>YOUR CART</Title>
         <Top>
           <Link to="/products">
@@ -243,16 +288,18 @@ const Cart = () => {
               <TopText>Shopping Bag ({totalQuantity})</TopText>
             )}
           </TopTexts>
-          <StripeCheckout
-            stripeKey="pk_test_51KGRP6EVzyUnSBi9XFfZSbOyBlp6bxDi470qqy0rON2MVmH322KgZOsa8xNeURp09bV098TUebGfyoI8BuHqudpc00mYmz4ZXS"
-            token={handleToken}
-            billingAddress
-            shippingAddress
-            name="All Products"
-            amount={TotalProductPrice * 100}
-          >
-            <TopButton type="filled">PAY WITH CARD</TopButton>
-          </StripeCheckout>
+          <div>
+            <StripeCheckout
+              stripeKey="pk_test_51KGRP6EVzyUnSBi9XFfZSbOyBlp6bxDi470qqy0rON2MVmH322KgZOsa8xNeURp09bV098TUebGfyoI8BuHqudpc00mYmz4ZXS"
+              token={handleToken}
+              billingAddress
+              shippingAddress
+              name="All Products"
+              amount={TotalProductPrice * 100}
+            >
+              <TopButton type="filled">MAKE PAYMENT</TopButton>
+            </StripeCheckout>
+          </div>
         </Top>
 
         {cartProducts.length < 1 && <Info>No Products in Cart</Info>}
@@ -285,15 +332,15 @@ const Cart = () => {
               <SummaryItemPrice>$ {TotalProductPrice}</SummaryItemPrice>
             </SummaryItem>
 
-            <Button onClick={() => triggerModal()}>CASH ON DELIVERY</Button>
+            {/* <Button onClick={() => triggerModal()}>CASH ON DELIVERY</Button> */}
 
-            {showModal === true && (
+            {/* {showModal === true && (
               <Modal
                 TotalProductPrice={TotalProductPrice}
                 totalQuantity={totalQuantity}
                 hideModal={hideModal}
               />
-            )}
+            )} */}
           </Summary>
         </Bottom>
       </Wrapper>

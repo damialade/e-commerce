@@ -70,7 +70,6 @@ const NewsLetter = () => {
   const handleForm = (e) => {
     e.preventDefault();
     if (input) {
-      console.log(input);
       //add to firebase
       fs.collection("newsletter").add({
         email: input,

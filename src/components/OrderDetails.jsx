@@ -1,10 +1,9 @@
-import { useParams } from "react-router-dom";
-import { useState, useEffect } from "react";
-import { fs } from "../pages/firebase";
+import { useParams, Link } from "react-router-dom";
+import { useState, useEffect, useCallback } from "react";
+import { fs, auth } from "../pages/firebase"; // Assuming auth is required
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
 import LoadingSpinner from "./LoadingSpinner";
-import { Link } from "react-router-dom";
 
 const Container = styled.div``;
 
@@ -14,62 +13,93 @@ const Wrapper = styled.div`
   flex-wrap: wrap;
   justify-content: space-between;
 `;
+
 const Title = styled.h2`
   margin: 20px;
-  text-align:center;
+  text-align: center;
 `;
 
 const OrderDetails = () => {
-  const params = useParams();
+  const { orderId } = useParams();
 
-  const { orderId } = params;
+  const [order, setOrder] = useState(null); // To store the order details
+  const [loading, setLoading] = useState(true); // To manage loading state
+  const [error, setError] = useState(null); // To handle errors
 
-  //retrieving all orders from firebase
-  const [orders, setOrders] = useState([]);
-  const getAllOrders = async () => {
-    const orders = await fs.collection("Orders").get();
-    const ordersArray = [];
-    for (var snap of orders.docs) {
-      var data = snap.data();
-      data.ID = snap.id;
-      ordersArray.push({
-        ...data,
-      });
-      if (ordersArray.length === orders.docs.length) {
-        setOrders(ordersArray);
+  const fetchOrderDetails = useCallback(async () => {
+    try {
+      setLoading(true);
+      const user = auth.currentUser;
+
+      if (!user) {
+        setError("You need to be logged in to view order details.");
+        setLoading(false);
+        return;
       }
+
+      const orderDoc = await fs.collection("Orders").doc(orderId).get();
+
+      if (!orderDoc.exists) {
+        setError("Order not found.");
+      } else {
+        setOrder(orderDoc.data());
+      }
+    } catch (err) {
+      console.error("Error fetching order details:", err);
+      setError("An error occurred while fetching order details.");
+    } finally {
+      setLoading(false);
     }
-  };
+  }, [orderId]);
 
   useEffect(() => {
-    window.scrollTo({
-      top: 0,
-      behavior: "smooth",
-    });
-    getAllOrders();
-  }, []);
+    fetchOrderDetails();
+  }, [fetchOrderDetails]);
 
-  const selectedItem = orders.filter((order) => order.ID === orderId);
+  const ItemsArray = order?.OrderItems;
 
-  console.log(selectedItem);
+  if (loading) {
+    return <LoadingSpinner />;
+  }
 
-  const ItemsArray = selectedItem[0]?.OrderItems;
-
-  console.log(ItemsArray);
+  if (error) {
+    return (
+      <Container>
+        <Title>Order Details</Title>
+        <p style={{ textAlign: "center", color: "red" }}>{error}</p>
+        <p style={{ textAlign: "center" }}>
+          Click{" "}
+          <Link
+            to="/account"
+            style={{ textDecoration: "none", color: "green" }}
+          >
+            here
+          </Link>{" "}
+          to go back.
+        </p>
+      </Container>
+    );
+  }
 
   return (
     <Container>
-      <Title> Order Details </Title>
+      <Title>Order Details</Title>
       <p style={{ textAlign: "center" }}>
-        Click <Link to="/account" style = {{textDecoration:"none", color:"green"}}> here </Link>to Go back
+        Click{" "}
+        <Link to="/account" style={{ textDecoration: "none", color: "green" }}>
+          here
+        </Link>{" "}
+        to go back.
       </p>
       <Wrapper>
         {ItemsArray &&
-          ItemsArray.map((orderItemData) => {
-            return <OrderItem individualProduct={orderItemData} />;
-          })}
+          ItemsArray.map((orderItemData, index) => (
+            <OrderItem key={index} individualProduct={orderItemData} />
+          ))}
       </Wrapper>
-      {ItemsArray?.length < 1 && <LoadingSpinner />}
+      {!ItemsArray?.length && (
+        <p style={{ textAlign: "center" }}>No items found in this order.</p>
+      )}
     </Container>
   );
 };

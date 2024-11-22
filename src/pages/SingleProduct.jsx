@@ -6,8 +6,12 @@ import NewsLetter from "../components/NewsLetter";
 import Footer from "../components/Footer";
 import CopyRight from "../components/CopyRight";
 import { mobile } from "../responsive";
-import { fs } from "./firebase";
+import { fs, auth } from "./firebase";
+import { toast, ToastContainer } from "react-toastify";
 import { useHistory, useParams } from "react-router-dom";
+import "react-toastify/dist/ReactToastify.css";
+
+toast.configure();
 
 const Container = styled.div``;
 
@@ -86,7 +90,7 @@ const AmountContainer = styled.div`
   font-weight: 700;
 `;
 const Input = styled.input`
-  width: 30px;
+  width: 50px;
   height: 30px;
   border-radius: 10px;
   border: 1px solid teal;
@@ -96,11 +100,13 @@ const Input = styled.input`
   justify-content: center;
 `;
 const Button = styled.button`
-  padding: 20px;
+  padding: 10px 30px;
   background-color: white;
   border: 2px solid teal;
-  font-weight: 500;
+  font-weight: 400;
+  font-size: 12px;
   cursor: pointer;
+  margin-top: 15px;
 
   &:hover {
     background-color: #afd8c2;
@@ -135,9 +141,6 @@ const SingleProduct = () => {
   const prod = product?.find((prd) => {
     return prd.ID === productId;
   });
-  console.log(productId);
-
-  console.log(prod);
 
   useEffect(() => {
     getProduct();
@@ -148,45 +151,75 @@ const SingleProduct = () => {
   }, []);
 
   //passing addTo Cart props
-  const uid = localStorage.getItem("userId");
-  let Product;
   const addToCart = (item) => {
-    if (uid !== null) {
-      Product = item;
-      Product["TotalProductPrice"] = item.quantity * item.price;
-      fs.collection("Cart" + uid)
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (uid) {
+      item["TotalProductPrice"] = item.quantity * item.price;
+
+      fs.collection("Cart")
+        .doc(uid)
+        .collection("Items")
         .doc(item.ID)
-        .set(Product)
-        .then(() => {});
+        .set(item)
+        .then(() => {
+          toast.success("Your item has been added successfully to cart");
+        })
+        .catch((error) => {
+          console.error("Error adding item to cart:", error);
+          toast.error("There was an issue adding the product to your cart.");
+        });
     } else {
+      toast.error("Please log in to add items to the cart.");
       navigate.push("/login");
     }
   };
 
+  // Function to handle adding an item to the cart with selected size and quantity
   const handleAddToCart = (e) => {
     e.preventDefault();
+
     const selectedSize = sizeRef.current.value;
     const selectedQuantity = quantityRef.current.value;
 
-    addToCart({
+    const uid = auth.currentUser?.uid || localStorage.getItem("userId");
+
+    if (!uid) {
+      toast.error("You need to log in first.");
+      navigate.push("/login");
+      return;
+    }
+
+    const item = {
       ID: prod.ID,
       url: prod.url,
       price: prod.price,
-
       desc: prod.desc,
       quantity: +selectedQuantity,
       size: selectedSize,
       title: prod.title,
       color: prod.color,
-    });
+    };
+
+    addToCart(item);
+
     navigate.push("/cart");
   };
+
+  auth.onAuthStateChanged((user) => {
+    if (user) {
+      localStorage.setItem("userId", user.uid);
+    } else {
+      localStorage.removeItem("userId");
+    }
+  });
 
   return (
     <Container>
       <NavBar />
       <Information />
       <Wrapper>
+        <ToastContainer />
         <ImgContainer>
           <Image src={prod?.url} />
         </ImgContainer>
@@ -221,8 +254,8 @@ const SingleProduct = () => {
                   max="10"
                 />
               </AmountContainer>
-              <Button type="submit">ADD TO CART</Button>
             </AddContainer>
+            <Button type="submit">ADD TO CART</Button>
           </form>
         </InfoContainer>
       </Wrapper>
