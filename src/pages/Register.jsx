@@ -157,7 +157,7 @@ const Register = () => {
             your personal data
             <Link
               to="/login"
-              style={{ textDecoration: "underline", color: "black" }}
+              style={{ textDecoration: "underline", color: "#4e6539", fontSize:"16px",fontWeight:"bold"  }}
             >
               {" "}
               Login here
