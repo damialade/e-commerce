@@ -164,8 +164,7 @@ const SingleProduct = () => {
 
   //passing addTo Cart props
   const addToCart = async(item) => {
-   const user = auth.currentUser || null;
-    const uid = user?.uid || localStorage.getItem("userId");
+    const uid = auth?.currentUser || localStorage.getItem("userId");
 
     if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
@@ -201,7 +200,7 @@ try{
 
     const uid = auth?.currentUser.uid || localStorage.getItem("userId");
 
-    if (!uid) {
+    if (!uid  || uid === "null") {
       toast.error("You need to log in first.");
       setTimeout(() => {
         navigate("/login");
