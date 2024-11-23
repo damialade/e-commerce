@@ -150,13 +150,17 @@ const SingleProduct = () => {
     });
   }, []);
 
-   auth.onAuthStateChanged((user) => {
-    if (user) {
-      localStorage.setItem("userId", user.uid);
-    } else {
-      localStorage.removeItem("userId");
-    }
-  });
+   useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        localStorage.removeItem("userId"); 
+      } else {
+        localStorage.setItem("userId", user.uid); 
+      }
+    });
+
+    return () => unsubscribe(); 
+  }, []);
 
   //passing addTo Cart props
   const addToCart = async(item) => {
