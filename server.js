@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Checkout Endpoint
-app.post("/payment", async (req, res) => {
+app.post("https://e-commerce-damialade.vercel.app/payment", async (req, res) => {
   let { cart, token } = req.body;
   try {
     // Validate cart data
