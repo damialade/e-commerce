@@ -104,7 +104,7 @@ const ProductsLists = () => {
       toast.error("Please log in to add items to the WishList.");
         navigate("/login"); 
   };
-
+  }
 
   //categories list rendering
   const [spans] = useState([
