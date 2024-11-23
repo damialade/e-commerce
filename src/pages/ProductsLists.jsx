@@ -110,7 +110,7 @@ const ProductsLists = () => {
       }, 1000);
     }
   };
-};
+
 
   //categories list rendering
   const [spans] = useState([
