@@ -150,14 +150,23 @@ const SingleProduct = () => {
     });
   }, []);
 
+   auth.onAuthStateChanged((user) => {
+    if (user) {
+      localStorage.setItem("userId", user.uid);
+    } else {
+      localStorage.removeItem("userId");
+    }
+  });
+
   //passing addTo Cart props
-  const addToCart = (item) => {
-    const uid = auth?.currentUser.uid || localStorage.getItem("userId");
+  const addToCart = async(item) => {
+   const user = auth.currentUser || null;
+    const uid = user?.uid || localStorage.getItem("userId");
 
-    if (uid) {
+    if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
-
-      fs.collection("Cart")
+try{
+   await fs.collection("Cart")
         .doc(uid)
         .collection("Items")
         .doc(item.ID)
@@ -165,13 +174,16 @@ const SingleProduct = () => {
         .then(() => {
           toast.success("Your item has been added successfully to cart");
         })
-        .catch((error) => {
+}
+      catch((error) => {
           console.error("Error adding item to cart:", error);
           toast.error("There was an issue adding the product to your cart.");
         });
     } else {
       toast.error("Please log in to add items to the cart.");
-      navigate.push("/login");
+     setTimeout(() => {
+        navigate("/login");
+      }, 1000)
     }
   };
 
@@ -186,7 +198,9 @@ const SingleProduct = () => {
 
     if (!uid) {
       toast.error("You need to log in first.");
-      navigate.push("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000)
       return;
     }
 
@@ -206,14 +220,7 @@ const SingleProduct = () => {
     navigate.push("/cart");
   };
 
-  auth.onAuthStateChanged((user) => {
-    if (user) {
-      localStorage.setItem("userId", user.uid);
-    } else {
-      localStorage.removeItem("userId");
-    }
-  });
-
+ 
   return (
     <Container>
       <NavBar />
