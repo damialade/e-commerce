@@ -184,7 +184,7 @@ const Cart = () => {
       const cart = { name: "All Products", TotalProductPrice };
 
       // Simulate successful response
-      const response = await axios.post("/payment", {
+      const response = await axios.post("https://e-commerce-damialade.vercel.app/payment", {
         cart,
         token,
       });
