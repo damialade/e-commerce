@@ -179,11 +179,12 @@ try{
           toast.success("Your item has been added successfully to cart");
         })
 }
-      catch((error) => {
+
+      catch(error)  {
           console.error("Error adding item to cart:", error);
-          toast.error("There was an issue adding the product to your cart.");
-        });
-    } else {
+          toast.error("There was an issue adding the product to your cart.");  
+    } 
+  } else {
       toast.error("Please log in to add items to the cart.");
      setTimeout(() => {
         navigate("/login");
