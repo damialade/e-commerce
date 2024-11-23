@@ -80,7 +80,7 @@ const ProductsLists = () => {
     return () => unsubscribe(); // Cleanup listener on unmount
   }, []);
 
-  const addToFavorite = (product) => {
+  const addToFavorite = async(product) => {
    const user = auth?.currentUser || null;
 
     // Check if user is logged in
