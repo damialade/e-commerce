@@ -77,13 +77,11 @@ const ProductsLists = () => {
       }
     });
 
-    return () => unsubscribe(); // Cleanup listener on unmount
+    return () => unsubscribe(); 
   }, []);
 
   const addToFavorite = async(product) => {
    const user = auth?.currentUser || null;
-
-    // Check if user is logged in
     const uid = user?.uid || localStorage.getItem("userId");
 
     if (uid && uid !== "null") {
