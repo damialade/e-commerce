@@ -132,11 +132,10 @@ const Login = () => {
           />
 
           <Agreement>
-            Don't have an account? You are consenting to the processing of your
-            personal data
+            Don't have an account?
             <Link
               to="/register"
-              style={{ textDecoration: "underline", color: "black" }}
+              style={{ textDecoration: "underline", color: "#4e6539", fontSize:"16px",fontWeight:"bold"  }}
             >
               {" "}
               Register{" "}
