@@ -178,17 +178,13 @@ try{
           toast.success("Your item has been added successfully to cart");
         })
 }
-
       catch(error)  {
           console.error("Error adding item to cart:", error);
           toast.error("There was an issue adding the product to your cart.");  
     } 
   } else {
       toast.error("Please log in to add items to the cart.");
-     setTimeout(() => {
         navigate("/login");
-      }, 1000)
-    }
   };
 
   // Function to handle adding an item to the cart with selected size and quantity
@@ -202,9 +198,7 @@ try{
 
     if (!uid  || uid === "null") {
       toast.error("You need to log in first.");
-      setTimeout(() => {
         navigate("/login");
-      }, 1000)
       return;
     }
 
