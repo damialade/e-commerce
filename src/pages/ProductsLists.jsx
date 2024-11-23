@@ -81,9 +81,7 @@ const ProductsLists = () => {
   }, []);
 
   const addToFavorite = async(product) => {
-   const user = auth?.currentUser || null;
-    const uid = user?.uid || localStorage.getItem("userId");
-
+    const uid = auth?.currentUser || localStorage.getItem("userId");
     if (uid && uid !== "null") {
       const wishlistItem = { ...product, qty: 1 };
 
