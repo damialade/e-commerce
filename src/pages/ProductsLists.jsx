@@ -102,11 +102,7 @@ const ProductsLists = () => {
       }
     } else {
       toast.error("Please log in to add items to the WishList.");
-     
-      setTimeout(() => {
-        navigate("/login");
-      }, 1000);
-    }
+        navigate("/login"); 
   };
 
 
