@@ -67,33 +67,52 @@ const ProductsLists = () => {
 
   const navigate = useHistory();
 
+    // Check authentication state before proceeding
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      if (!user) {
+        localStorage.removeItem("userId"); 
+      } else {
+        localStorage.setItem("userId", user.uid); 
+      }
+    });
+
+    return () => unsubscribe(); // Cleanup listener on unmount
+  }, []);
+
   const addToFavorite = (product) => {
-    const uid = auth?.currentUser.uid || localStorage.getItem("userId");
+   const user = auth?.currentUser || null;
+
+    // Check if user is logged in
+    const uid = user?.uid || localStorage.getItem("userId");
 
     if (uid && uid !== "null") {
       const wishlistItem = { ...product, qty: 1 };
 
-      fs.collection("Wishlist")
-        .doc(uid)
-        .collection("Items")
-        .doc(product.ID)
-        .set(wishlistItem)
-        .then(() => {
-          toast.success(
-            "Your item has been added successfully to your WishList"
-          );
-        })
-        .catch((error) => {
-          console.error("Error adding item to wishlist:", error);
-          toast.error(
-            "There was an issue adding the product to your WishList."
-          );
-        });
+    try {
+        await fs
+          .collection("Wishlist")
+          .doc(uid)
+          .collection("Items")
+          .doc(product.ID)
+          .set(wishlistItem);
+
+        toast.success(
+          "Your item has been added successfully to your WishList"
+        );
+      } catch (error) {
+        console.error("Error adding item to wishlist:", error);
+        toast.error("There was an issue adding the product to your WishList.");
+      }
     } else {
       toast.error("Please log in to add items to the WishList.");
-      navigate.push("/login");
+     
+      setTimeout(() => {
+        navigate("/login");
+      }, 1000);
     }
   };
+};
 
   //categories list rendering
   const [spans] = useState([
