@@ -15,6 +15,68 @@ const Wrapper = styled.div`
   margin: 10px;
 `;
 
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+
+  thead {
+    background-color: #f4f4f4;
+  }
+
+  th,
+  td {
+    padding: 12px;
+    border: 1px solid #ddd;
+  }
+
+  th {
+    font-weight: 600;
+    text-transform: uppercase;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+
+  tbody tr:hover {
+    background-color: #f1f1f1;
+  }
+`;
+
+const ActionButton = styled.button`
+  padding: 8px 16px;
+  background-color: #4e6539;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: #f1f1f1;
+    color:#333;
+  }
+`;
+
+const Message = styled.p`
+  font-size: 18px;
+  color: #555;
+
+  a {
+    color: green;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+`;
+
 const MyAccount = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,43 +141,37 @@ const MyAccount = () => {
       <Information />
       <Wrapper>
         {orders.length > 0 ? (
-          <table>
+          <Table>
             <thead>
               <tr>
-                <th scope="col">S/N</th>
-                <th scope="col">Order Id</th>
-                <th scope="col">Order Total</th>
-                <th scope="col">Total Quantity</th>
-                <th scope="col">Actions</th>
+                <th>S/N</th>
+                <th>Order Id</th>
+                <th>Order Total</th>
+                <th>Total Quantity</th>
+                <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {orders.map((orderData, index) => (
-                <tr active key={orderData.id}>
-                  <td>{index + 1}</td> {/* Use index for serial number */}
+                <tr key={orderData.id}>
+                  <td>{index + 1}</td>
                   <td>{orderData.id}</td>
                   <td>${orderData.OrderPrice}</td>
                   <td>{orderData.OrderQuantity}</td>
                   <td>
                     <Link to={`/orderDetails/${orderData.id}`}>
-                      <button>View Items</button>
+                      <ActionButton>View Items</ActionButton>
                     </Link>
                   </td>
                 </tr>
               ))}
             </tbody>
-          </table>
+          </Table>
         ) : (
-          <p>
-            You have never placed an Order. Click{" "}
-            <Link
-              to="/products"
-              style={{ textDecoration: "none", color: "green" }}
-            >
-              here
-            </Link>{" "}
-            to Order
-          </p>
+          <Message>
+            You have never placed an order. Click{" "}
+            <Link to="/products">here</Link> to order.
+          </Message>
         )}
       </Wrapper>
       <NewsLetter />
