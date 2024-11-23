@@ -150,41 +150,42 @@ const SingleProduct = () => {
     });
   }, []);
 
-   useEffect(() => {
+  useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       if (!user) {
-        localStorage.removeItem("userId"); 
+        localStorage.removeItem("userId");
       } else {
-        localStorage.setItem("userId", user.uid); 
+        localStorage.setItem("userId", user.uid);
       }
     });
 
-    return () => unsubscribe(); 
+    return () => unsubscribe();
   }, []);
 
   //passing addTo Cart props
-  const addToCart = async(item) => {
+  const addToCart = async (item) => {
     const uid = auth?.currentUser || localStorage.getItem("userId");
 
     if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
-try{
-   await fs.collection("Cart")
-        .doc(uid)
-        .collection("Items")
-        .doc(item.ID)
-        .set(item)
-        .then(() => {
-          toast.success("Your item has been added successfully to cart");
-        })
-}
-      catch(error)  {
-          console.error("Error adding item to cart:", error);
-          toast.error("There was an issue adding the product to your cart.");  
-    } 
-  } else {
+      try {
+        await fs
+          .collection("Cart")
+          .doc(uid)
+          .collection("Items")
+          .doc(item.ID)
+          .set(item)
+          .then(() => {
+            toast.success("Your item has been added successfully to cart");
+          });
+      } catch (error) {
+        console.error("Error adding item to cart:", error);
+        toast.error("There was an issue adding the product to your cart.");
+      }
+    } else {
       toast.error("Please log in to add items to the cart.");
-        navigate("/login");
+      navigate("/login");
+    }
   };
 
   // Function to handle adding an item to the cart with selected size and quantity
@@ -196,9 +197,9 @@ try{
 
     const uid = auth?.currentUser.uid || localStorage.getItem("userId");
 
-    if (!uid  || uid === "null") {
+    if (!uid || uid === "null") {
       toast.error("You need to log in first.");
-        navigate("/login");
+      navigate("/login");
       return;
     }
 
@@ -218,7 +219,6 @@ try{
     navigate.push("/cart");
   };
 
- 
   return (
     <Container>
       <NavBar />
