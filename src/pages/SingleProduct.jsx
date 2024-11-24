@@ -185,7 +185,7 @@ const SingleProduct = () => {
       }
     } else {
       toast.error("Please log in to add items to the cart.");
-      navigate("/login");
+      navigate.push("/login");
     }
   };
 
@@ -197,11 +197,10 @@ const SingleProduct = () => {
     const selectedQuantity = quantityRef.current.value;
 
     const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-    console.log(typeof uid);
-    console.log(uid);
+   
     if (!uid || uid === "null") {
       toast.error("You need to log in first.");
-      navigate("/login");
+      navigate.push("/login");
       return;
     }
 
