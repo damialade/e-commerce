@@ -197,7 +197,7 @@ const SingleProduct = () => {
     const selectedSize = sizeRef.current.value;
     const selectedQuantity = quantityRef.current.value;
 
-    const uid = auth?.currentUser.uid || localStorage.getItem("userId");
+    const uid = auth.currentUser.uid || localStorage.getItem("userId");
     console.log(typeof uid);
     console.log(uid);
     if (!uid || uid === "null") {
