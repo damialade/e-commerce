@@ -165,9 +165,8 @@ const SingleProduct = () => {
 
   //passing addTo Cart props
   const addToCart = async (item) => {
-    const uid = auth.currentUser || localStorage.getItem("userId");
-    console.log(typeof uid);
-    console.log(uid);
+    const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
+    console.log(auth?.currentUser)
     if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
       try {
@@ -197,7 +196,7 @@ const SingleProduct = () => {
     const selectedSize = sizeRef.current.value;
     const selectedQuantity = quantityRef.current.value;
 
-    const uid = auth.currentUser.uid || localStorage.getItem("userId");
+    const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
     console.log(typeof uid);
     console.log(uid);
     if (!uid || uid === "null") {
