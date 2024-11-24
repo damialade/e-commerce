@@ -81,7 +81,7 @@ const ProductsLists = () => {
   }, []);
 
   const addToFavorite = async(product) => {
-    const uid = auth?.currentUser || localStorage.getItem("userId");
+    const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
     if (uid && uid !== "null") {
       const wishlistItem = { ...product, qty: 1 };
 
@@ -102,7 +102,7 @@ const ProductsLists = () => {
       }
     } else {
       toast.error("Please log in to add items to the WishList.");
-        navigate("/login"); 
+        navigate.push("/login"); 
   };
   }
 
