@@ -96,6 +96,7 @@ const Input = styled.input`
   border: 1px solid teal;
   display: flex;
   margin: 0 5px;
+  padding:0 5px;
   align-items: center;
   justify-content: center;
 `;
@@ -165,7 +166,8 @@ const SingleProduct = () => {
   //passing addTo Cart props
   const addToCart = async (item) => {
     const uid = auth?.currentUser || localStorage.getItem("userId");
-
+    console.log(typeof uid);
+    console.log(uid);
     if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
       try {
