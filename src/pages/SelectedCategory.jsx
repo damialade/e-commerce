@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { fs } from "./firebase";
+import { fs,auth } from "./firebase";
 import styled from "styled-components";
 import NavBar from "../components/NavBar";
 import Information from "../components/Information";
@@ -64,7 +64,7 @@ const SelectedCategory = () => {
 
     // Check authentication state before proceeding
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth?.onAuthStateChanged((user) => {
       if (!user) {
         localStorage.removeItem("userId"); 
       } else {
@@ -116,7 +116,7 @@ const SelectedCategory = () => {
           />
         ))}
       </Wrapper>
-      {products.length < 1 && <LoadingSpinner />}
+      {products?.length < 1 && <LoadingSpinner />}
 
       <NewsLetter />
       <Footer />
