@@ -184,7 +184,7 @@ const Cart = () => {
       const cart = { name: "All Products", TotalProductPrice };
 
       // Simulate successful response
-      const response = await axios.post("https://localhost:8080/api/checkout/payment", {
+      const response = await axios.post("https://e-commerce-damialade.vercel.app/api/checkout/payment", {
         cart,
         token,
       });
@@ -290,7 +290,7 @@ const Cart = () => {
           </TopTexts>
           <div>
             <StripeCheckout
-              stripeKey="pk_test_51KGRP6EVzyUnSBi9XFfZSbOyBlp6bxDi470qqy0rON2MVmH322KgZOsa8xNeURp09bV098TUebGfyoI8BuHqudpc00mYmz4ZXS"
+              stripeKey= process.env.pk_test_MY_PUBLISHABLE_KEY
               token={handleToken}
               billingAddress
               shippingAddress
