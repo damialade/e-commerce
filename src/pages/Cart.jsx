@@ -184,7 +184,7 @@ const Cart = () => {
       const cart = { name: "All Products", TotalProductPrice };
 
       // Simulate successful response
-      const response = await axios.post("https://pay.stripe.com/receipts/payment", {
+      const response = await axios.post("https://localhost:8080/api/checkout/payment", {
         cart,
         token,
       });
