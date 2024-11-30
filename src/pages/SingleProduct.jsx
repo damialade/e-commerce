@@ -166,7 +166,7 @@ const SingleProduct = () => {
   //passing addTo Cart props
   const addToCart = async (item) => {
     const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-    console.log(auth?.currentUser)
+    
     if (uid && uid !== "null") {
       item["TotalProductPrice"] = item.quantity * item.price;
       try {
