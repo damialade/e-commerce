@@ -124,7 +124,7 @@ const Cart = () => {
   //getting cart products from firestore collection and updating state of cart
   const uid = localStorage.getItem("userId");
   useEffect(() => {
-    auth.onAuthStateChanged((user) => {
+    auth?.onAuthStateChanged((user) => {
       if (user) {
         fs.collection("Cart")
           .doc(uid)
@@ -147,7 +147,7 @@ const Cart = () => {
   }, [uid]);
 
   // getting quantity from cart product in a separate array
-  const quantity = cartProducts.map((cartProduct) => {
+  const quantity = cartProducts?.map((cartProduct) => {
     return cartProduct.quantity;
   });
   //reducing quantity in single value
@@ -192,7 +192,7 @@ const Cart = () => {
       let { success, message } = response.data;
 
       if (success) {
-        const uid = auth.currentUser.uid; // Ensure user is authenticated
+        const uid = auth?.currentUser?.uid; // Ensure user is authenticated
 
         if (!uid) {
           console.error("User is not authenticated. Please login again.");
@@ -290,7 +290,7 @@ const Cart = () => {
           </TopTexts>
           <div>
             <StripeCheckout
-              stripeKey= process.env.pk_test_MY_PUBLISHABLE_KEY
+              stripeKey= {process.env.pk_test_MY_PUBLISHABLE_KEY}
               token={handleToken}
               billingAddress
               shippingAddress
