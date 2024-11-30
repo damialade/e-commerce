@@ -290,7 +290,7 @@ const Cart = () => {
           </TopTexts>
           <div>
             <StripeCheckout
-              stripeKey={process.env.PK_TEST_MY_PUBLISHABLE_KEY}
+              stripeKey="pk_test_51KGRP6EVzyUnSBi9XFfZSbOyBlp6bxDi470qqy0rON2MVmH322KgZOsa8xNeURp09bV098TUebGfyoI8BuHqudpc00mYmz4ZXS"
               token={handleToken}
               billingAddress
               shippingAddress
