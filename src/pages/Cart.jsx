@@ -180,11 +180,11 @@ const Cart = () => {
 
   const handleToken = async (token) => {
     try {
-      // Simplify cart details if external post is not needed
+      
       const cart = { name: "All Products", TotalProductPrice };
 
       // Simulate successful response
-      const response = await axios.post("https://e-commerce-tiannah.vercel.app", {
+      const response = await axios.post("http://e-commerce-tiannah.vercel.app", {
         cart,
         token,
       });
