@@ -184,7 +184,7 @@ const Cart = () => {
       const cart = { name: "All Products", TotalProductPrice };
 
       // Simulate successful response
-      const response = await axios.post("http://e-commerce-tiannah.vercel.app/payment", {
+      const response = await axios.post("https://e-commerce-tiannah.vercel.app/payment", {
         cart,
         token,
       });
