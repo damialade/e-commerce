@@ -189,6 +189,8 @@ const Cart = () => {
         token,
       });
 
+      
+
       let { success, message } = response.data;
 
       if (success) {
@@ -244,7 +246,7 @@ const Cart = () => {
     } catch (err) {
       console.error("Error in checkout:", err);
       const errorMessage =
-        err.response.data.message ||
+        err?.response?.data?.message ||
         "An unexpected error occurred. Please try again.";
       toast.error(errorMessage, {
         position: "top-right",
