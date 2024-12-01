@@ -20,29 +20,31 @@ app.post("/checkout", async (req, res) => {
     if (!cart || typeof cart.TotalProductPrice !== "number") {
       throw new Error("Invalid cart data");
     }
-    const customer = await stripe.customers.create({
-      email: token.email,
-      source: token.id,
-    });
+    // const customer = await stripe.customers.create({
+    //   email: token.email,
+    //   source: token.id,
+    // });
+    
 
-    const charge = await stripe.charges.create({
-      amount: cart.TotalProductPrice * 100, // Convert to cents
-      currency: "usd",
-      customer: customer.id,
-      receipt_email: token.email,
-      description: "Purchase from Tiannah E-commerce Store",
-      shipping: {
-        name: token.card.name,
-        address: {
-          line1: token.card.address_line1,
-          city: token.card.address_city,
-          country: token.card.address_country,
-          postal_code: token.card.address_zip,
-        },
-      },
-    });
+    // const charge = await stripe.charges.create({
+    //   amount: cart.TotalProductPrice * 100, // Convert to cents
+    //   currency: "usd",
+    //   customer: customer.id,
+    //   receipt_email: token.email,
+    //   description: "Purchase from Tiannah E-commerce Store",
+    //   shipping: {
+    //     name: token.card.name,
+    //     address: {
+    //       line1: token.card.address_line1,
+    //       city: token.card.address_city,
+    //       country: token.card.address_country,
+    //       postal_code: token.card.address_zip,
+    //     },
+    //   },
+    // });
 
-    console.log("Charge successful:", charge);
+    // console.log("Charge successful:", charge);
+    console.log("Entered Try bLock");
     res.json({
       message: "Payment successful",
       success: true,
