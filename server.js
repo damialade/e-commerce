@@ -42,7 +42,7 @@ app.post("/checkout", async (req, res) => {
       },
     });
 
-    console.log("Charge successful:", payment);
+    console.log("Charge successful:", charge);
     res.json({
       message: "Payment successful",
       success: true,
