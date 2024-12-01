@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Checkout Endpoint
-app.post("/payment", async (req, res) => {
+app.post("/checkout", async (req, res) => {
   let { cart, token } = req.body;
   try {
     // Validate cart data
@@ -25,7 +25,7 @@ app.post("/payment", async (req, res) => {
       source: token.id,
     });
 
-    const payment = await stripe.charges.create({
+    const charge = await stripe.charges.create({
       amount: cart.TotalProductPrice * 100, // Convert to cents
       currency: "usd",
       customer: customer.id,
