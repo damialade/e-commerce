@@ -122,7 +122,7 @@ const Cart = () => {
   const [cartProducts, setCartProducts] = useState([]);
 
   //getting cart products from firestore collection and updating state of cart
-  const uid = localStorage.getItem("userId");
+  const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
   useEffect(() => {
     auth?.onAuthStateChanged((user) => {
       if (user) {
@@ -169,13 +169,26 @@ const Cart = () => {
 
   const navigate = useHistory();
 
-  let localId = localStorage.getItem("userId");
-
   const deleteCart = () => {
     if (!cartProducts || cartProducts.length === 0) return;
+     const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
+    try {
+    const batch = fs.batch(); 
+
     cartProducts.forEach((cartProduct) => {
-      fs.collection(`Cart${localId}`).doc(cartProduct.ID).delete();
+      const docRef = fs
+        .collection("Cart")
+        .doc(uid)
+        .collection("Items")
+        .doc(cartProduct.ID);
+      batch.delete(docRef);
     });
+
+    await batch.commit(); 
+     toast.success("Cart cleared successfully.");
+  } catch (error) {
+     toast.error("Error deleting cart items:", error);
+  }
   };
 
   const handleToken = async (token) => {
@@ -187,7 +200,7 @@ const Cart = () => {
       JSON.stringify({ token, cart }),
       {
         headers: {
-          "Content-Type": "application/json", // Ensuring correct content type
+          "Content-Type": "application/json", 
         },
       }
     );
@@ -195,7 +208,7 @@ const Cart = () => {
     const { status } = response.data;
 
     if (status === "success") {
-      const uid = auth?.currentUser?.uid; // Ensure user is authenticated
+      const uid = auth?.currentUser?.uid; 
       
       // Add order to Firestore
       await fs.collection("Orders").add({
