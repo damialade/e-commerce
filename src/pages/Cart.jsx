@@ -183,8 +183,6 @@ const Cart = () => {
         .doc(cartProduct.ID);
       batch.delete(docRef);
     });
-
-    await batch.commit(); 
      toast.success("Cart cleared successfully.");
   } catch (error) {
      toast.error("Error deleting cart items:", error);
