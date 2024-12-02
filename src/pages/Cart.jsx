@@ -179,32 +179,54 @@ const Cart = () => {
   };
 
   const handleToken = async (token) => {
-      const cart = { name: "All Products", TotalProductPrice };
-      // Simulate successful response
-      const response = await axios.post("https://e-commerce-tiannah.vercel.app/checkout", {
-        token,
-        cart,
+  const cart = { name: "All Products", TotalProductPrice };
+
+  try {
+    const response = await axios.post(
+      "https://e-commerce-tiannah.vercel.app/checkout",
+      JSON.stringify({ token, cart }),
+      {
+        headers: {
+          "Content-Type": "application/json", // Ensuring correct content type
+        },
+      }
+    );
+
+    const { status } = response.data;
+
+    if (status === "success") {
+      const uid = auth?.currentUser?.uid; // Ensure user is authenticated
+      
+      // Add order to Firestore
+      await fs.collection("Orders").add({
+        OrderPrice: TotalProductPrice,
+        OrderQuantity: totalQuantity,
+        UserId: uid,
+        OrderItems: cartProducts,
+        PaymentMethod: "Stripe/Card",
       });
-     console.log(response);
-     let { status } = response.data;
 
-      if (status ="success") {
-        const uid = auth?.currentUser?.uid; // Ensure user is authenticated
-        
-        // Add order to Firestore
-        await fs.collection("Orders").add({
-          OrderPrice: TotalProductPrice,
-          OrderQuantity: totalQuantity,
-          UserId: uid,
-          OrderItems: cartProducts,
-          PaymentMethod: "Stripe/Card",
-        });
+      // Clear cart
+      deleteCart();
 
-        // Clear cart
-        deleteCart();
+      // Redirect and notify
+      toast.success("Your order has been placed successfully", {
+        position: "top-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: false,
+        progress: undefined,
+      });
+      setTimeout(() => {
+        navigate.push("/products");
+      }, 3000);
 
-        // Redirect and notify
-        toast.success("Your order has been placed successfully", {
+    } else {
+      toast.error(
+        "Something went wrong during checkout. Please try again.",
+        {
           position: "top-right",
           autoClose: 5000,
           hideProgressBar: false,
@@ -212,27 +234,22 @@ const Cart = () => {
           pauseOnHover: false,
           draggable: false,
           progress: undefined,
-        });
-        setTimeout(() => {
-          navigate.push("/products");
-        }, 3000);
-
-      } else {
-        toast.error(
-          "Something went wrong during checkout. Please try again.",
-          {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-          }
-        );
-      }
-  };
-
+        }
+      );
+    }
+  } catch (error) {
+    console.error("Error during checkout: ", error);
+    toast.error("An error occurred. Please try again.", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: false,
+      progress: undefined,
+    });
+  }
+};
   //showing modal cash on delivery state
 
   // const [showModal, setShowModal] = useState(false);
