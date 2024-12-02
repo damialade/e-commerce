@@ -178,7 +178,7 @@ const Cart = () => {
         .doc(uid)
         .collection("Items")
         .doc(cartProduct.ID)
-    .delete(docRef);
+    .delete();
     });
      toast.success("Cart cleared successfully.");
   } catch (error) {
