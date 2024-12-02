@@ -183,7 +183,7 @@ const Cart = () => {
 
   try {
     const response = await axios.post(
-      "https://e-commerce-tiannah.vercel.app/checkout",
+      "/api/checkout",
       JSON.stringify({ token, cart }),
       {
         headers: {
