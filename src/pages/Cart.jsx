@@ -173,15 +173,12 @@ const Cart = () => {
     if (!cartProducts || cartProducts.length === 0) return;
      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
     try {
-    const batch = fs.batch(); 
-
     cartProducts.forEach((cartProduct) => {
-      const docRef = fs
-        .collection("Cart")
+      fs.collection("Cart")
         .doc(uid)
         .collection("Items")
-        .doc(cartProduct.ID);
-      batch.delete(docRef);
+        .doc(cartProduct.ID)
+    .delete(docRef);
     });
      toast.success("Cart cleared successfully.");
   } catch (error) {
@@ -206,7 +203,7 @@ const Cart = () => {
     const { status } = response.data;
 
     if (status === "success") {
-      const uid = auth?.currentUser?.uid; 
+      const uid = auth?.currentUser?.uid || localStorage.getItem("userId"); 
       
       // Add order to Firestore
       await fs.collection("Orders").add({
