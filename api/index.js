@@ -14,7 +14,7 @@ app.use(bodyParser.json());
 app.use(cors({ origin: "https://e-commerce-tiannah.vercel.app" }));
 
 // Checkout Endpoint
-app.post("/checkout", async (req, res) => {
+app.post("/api/checkout", async (req, res) => {
     let error;
     let status;
     try {
