@@ -38,8 +38,12 @@ const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
       OrderItems: cartProducts,
       PaymentMethod: "Free Delivery",
     });
-    cartProducts.forEach((cartProduct) => {
-      fs.collection(`Cart${uid}`).doc(cartProduct.ID).delete();
+   cartProducts.forEach((cartProduct) => {
+      fs.collection("Cart")
+        .doc(uid)
+        .collection("Items")
+        .doc(cartProduct.ID)
+    .delete();
     });
 
     hideModal();
