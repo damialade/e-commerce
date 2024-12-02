@@ -179,31 +179,18 @@ const Cart = () => {
   };
 
   const handleToken = async (token) => {
-    try {
-      
       const cart = { name: "All Products", TotalProductPrice };
-
       // Simulate successful response
       const response = await axios.post("https://e-commerce-tiannah.vercel.app/checkout", {
-        cart,
         token,
+        cart,
       });
+     console.log(response);
+     let { status } = response.data;
 
-      
-
-      let { success, message } = response.data;
-
-      if (success) {
+      if (status ="success") {
         const uid = auth?.currentUser?.uid; // Ensure user is authenticated
-
-        if (!uid) {
-          console.error("User is not authenticated. Please login again.");
-
-          // toast.error("User is not authenticated. Please login again.");
-          navigate.push("/login");
-          return;
-        }
-
+        
         // Add order to Firestore
         await fs.collection("Orders").add({
           OrderPrice: TotalProductPrice,
@@ -229,9 +216,10 @@ const Cart = () => {
         setTimeout(() => {
           navigate.push("/products");
         }, 3000);
+
       } else {
         toast.error(
-          message || "Something went wrong during checkout. Please try again.",
+          "Something went wrong during checkout. Please try again.",
           {
             position: "top-right",
             autoClose: 5000,
@@ -243,21 +231,6 @@ const Cart = () => {
           }
         );
       }
-    } catch (err) {
-      console.error("Error in checkout:", err);
-      const errorMessage =
-        err?.response?.data?.message ||
-        "An unexpected error occurred. Please try again.";
-      toast.error(errorMessage, {
-        position: "top-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: false,
-        progress: undefined,
-      });
-    }
   };
 
   //showing modal cash on delivery state
