@@ -56,17 +56,22 @@ const Modal = ({ TotalProductPrice, totalQuantity, hideModal }) => {
   };
 
   useEffect(() => {
-    fs.collection("Cart" + uid).onSnapshot((snapshot) => {
-      const newCartProduct = snapshot.docs.map((doc) => ({
-        ID: doc.id,
-        ...doc.data(),
-      }));
-      setCartProducts(newCartProduct);
+        fs.collection("Cart")
+          .doc(uid)
+          .collection("Items")
+          .onSnapshot((snapshot) => {
+            const newCartProduct = snapshot.docs.map((doc) => ({
+              ID: doc.id,
+              ...doc.data(),
+            }));
+            setCartProducts(newCartProduct);  
     });
   }, [uid]);
+
   const handleCloseModal = () => {
     hideModal();
   };
+  
 
   return (
     <div className="shade-area">
