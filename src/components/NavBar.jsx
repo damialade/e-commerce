@@ -106,39 +106,44 @@ const NavBar = () => {
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("Cart" + user.uid).onSnapshot((snapshot) => {
-          const newCartProduct = snapshot.docs.map((doc) => ({
-            ID: doc.id,
-            ...doc.data(),
-          }));
-          setCartProducts(newCartProduct);
-        });
+        fs.collection("Cart")
+          .doc(user.uid)
+          .collection("Items")
+          .onSnapshot((snapshot) => {
+            const newCartProduct = snapshot.docs.map((doc) => ({
+              ID: doc.id,
+              ...doc.data(),
+            }));
+            setCartProducts(newCartProduct);
+          });
       } else {
         console.log("user is not signed in");
       }
-    });
+    });  
   }, []);
 
   //state of cart products
   const [wishlistProducts, setWishListProducts] = useState([]);
 
   //getting wishlist products from firestore collection and updating state of wishlist
-  const uid = localStorage.getItem("userId");
-  useEffect(() => {
+ useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("WishList" + uid).onSnapshot((snapshot) => {
-          const newWishListProduct = snapshot.docs.map((doc) => ({
-            ID: doc.id,
-            ...doc.data(),
-          }));
-          setWishListProducts(newWishListProduct);
-        });
+        fs.collection("Wishlist")
+          .doc(user.uid)
+          .collection("Items")
+          .onSnapshot((snapshot) => {
+            const newWishListProduct = snapshot.docs.map((doc) => ({
+              ID: doc.id,
+              ...doc.data(),
+            }));
+            setWishListProducts(newWishListProduct);
+          });
       } else {
         console.log("user is not signed in");
       }
     });
-  }, [uid]);
+  }, []);
 
   return (
     <Container>
