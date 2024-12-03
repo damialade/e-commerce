@@ -169,8 +169,7 @@ const Cart = () => {
 
   //add order function
 const addOrder = async () => {
-  let uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-
+  const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
   if (uid === "null" || uid === null) {
     toast.error("User is not authenticated.");
     return;
@@ -187,26 +186,19 @@ const addOrder = async () => {
 
   try {
     const orderRef = await fs.collection("Orders").doc(uid).collection("Items").add(orderData);
- 
     for (const item of cartProducts) {
-      try {
-        await orderRef.collection("Items").add({
-          ...item,
-          OrderId: orderRef.id,
-          CreatedAt: new Date().toISOString(),
-        });
-        
-      } catch(err){
-        console.error("Order not successfully placed:", err);
+      await orderRef.collection("Items").add({
+        ...item,
+        OrderId: orderRef.id,
+        CreatedAt: new Date().toISOString(),
+      });
     }
-
     toast.success("Order placed successfully.");
   } catch (error) {
     console.error("Error adding order:", error);
     toast.error("Failed to place the order. Please try again.");
   }
 };
-
 
 //clear cart function
   const deleteCart = () => {
