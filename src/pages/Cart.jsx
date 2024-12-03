@@ -197,7 +197,7 @@ const addOrder = async () => {
         });
         
       } catch(err){
-        console.error("Ordernot successfully placed" err)
+        console.error("Order not successfully placed:", err);
     }
 
     toast.success("Order placed successfully.");
