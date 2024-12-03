@@ -84,23 +84,18 @@ const MyAccount = () => {
 
   const getAllOrders = async () => {
     try {
-      const user = auth.currentUser;
+  
+      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
 
-      if (!user) {
+      if (!uid) {
         console.error("No user is logged in.");
         history.push("/login");
         return;
       }
 
-      const uid = user.uid;
+      const ordersSnapshot = await fs.collection(`Orders/${uid}/Items`).get();
 
-      // Query Firestore for the user's orders
-      const querySnapshot = await fs
-        .collection("Orders")
-        .where("UserId", "==", uid)
-        .get();
-
-      const userOrders = querySnapshot.docs.map((doc) => ({
+      const userOrders = ordersSnapshot.docs.map((doc) => ({
         id: doc.id,
         ...doc.data(),
       }));
@@ -119,8 +114,10 @@ const MyAccount = () => {
       behavior: "smooth",
     });
     getAllOrders();
-  });
+  }, []);
 
+
+ 
   if (loading) {
     return (
       <Container>
@@ -159,7 +156,7 @@ const MyAccount = () => {
                   <td>${orderData.OrderPrice}</td>
                   <td>{orderData.OrderQuantity}</td>
                   <td>
-                    <Link to={`/orderDetails/${orderData.id}`}>
+                    <Link to={`/orderDetails/${orderData?.id}`}>
                       <ActionButton>View Items</ActionButton>
                     </Link>
                   </td>
