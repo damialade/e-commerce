@@ -180,10 +180,18 @@ const Cart = () => {
     OrderItems: cartProducts,
     PaymentMethod: "Stripe/Card",
     UserId: uid,
+    CreatedAt: new Date().toISOString(), 
   };
 
   try {
-    await fs.collection("Orders").add(orderData);
+    const orderRef = await fs.collection("Orders").doc(uid).collection("Items").add(orderData);
+    for (const item of cartProducts) {
+      await orderRef.collection("Items").add({
+        ...item, 
+        OrderId: orderRef.id,
+        CreatedAt: new Date().toISOString(),
+      });
+    }
     toast.success("Order placed successfully.");
   } catch (error) {
     console.error("Error adding order:", error);
