@@ -297,7 +297,9 @@ const Cart = () => {
               name="All Products"
               amount={TotalProductPrice * 100}
             >
+              {cartProducts.length > 0 && (
               <TopButton type="filled">MAKE PAYMENT</TopButton>
+              )}
             </StripeCheckout>
           </div>
         </Top>
