@@ -54,7 +54,7 @@ const OrderDetails = () => {
       ...itemsSnapshot.data(),
     };
 
-      setOrders(userOrderDetails);
+      setOrder(userOrderDetails);
     } catch (error) {
       console.error("Error fetching user orders:", error);
       toast.error("An error occurred while fetching the items.");
