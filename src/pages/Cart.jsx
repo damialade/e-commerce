@@ -196,10 +196,7 @@ const addOrder = async () => {
           CreatedAt: new Date().toISOString(),
         });
         console.log("Item added successfully:", item);
-      } catch (err) {
-        console.error("Error adding item:", err, "for item:", item);
-        toast.error(`Failed to add item: ${item.name || 'Unknown Item'}.`);
-      }
+      } 
     }
 
     toast.success("Order placed successfully.");
