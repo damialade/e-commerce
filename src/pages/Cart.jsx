@@ -170,7 +170,7 @@ const Cart = () => {
   //add order function
  const addOrder = async () => {
   let uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-   if (uid = "null") {
+   if (uid === "null" || uid === null) {
     toast.error("User is not authenticated.");
     return;
   }
