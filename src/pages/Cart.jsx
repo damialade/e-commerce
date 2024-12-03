@@ -168,36 +168,47 @@ const Cart = () => {
   const navigate = useHistory();
 
   //add order function
- const addOrder = async () => {
+const addOrder = async () => {
   let uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-   if (uid === "null" || uid === null) {
+
+  if (uid === "null" || uid === null) {
     toast.error("User is not authenticated.");
     return;
   }
+
   const orderData = {
     OrderPrice: TotalProductPrice,
     OrderQuantity: totalQuantity,
     OrderItems: cartProducts,
     PaymentMethod: "Stripe/Card",
     UserId: uid,
-    CreatedAt: new Date().toISOString(), 
+    CreatedAt: new Date().toISOString(),
   };
 
   try {
     const orderRef = await fs.collection("Orders").doc(uid).collection("Items").add(orderData);
+    console.log("Order added successfully:", orderRef.id);
     for (const item of cartProducts) {
-      await orderRef.collection("Items").add({
-        ...item, 
-        OrderId: orderRef.id,
-        CreatedAt: new Date().toISOString(),
-      });
+      try {
+        await orderRef.collection("Items").add({
+          ...item,
+          OrderId: orderRef.id,
+          CreatedAt: new Date().toISOString(),
+        });
+        console.log("Item added successfully:", item);
+      } catch (err) {
+        console.error("Error adding item:", err, "for item:", item);
+        toast.error(`Failed to add item: ${item.name || 'Unknown Item'}.`);
+      }
     }
+
     toast.success("Order placed successfully.");
   } catch (error) {
     console.error("Error adding order:", error);
     toast.error("Failed to place the order. Please try again.");
   }
 };
+
 
 //clear cart function
   const deleteCart = () => {
