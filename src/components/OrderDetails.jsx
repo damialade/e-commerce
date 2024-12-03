@@ -1,10 +1,11 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link,useHistory } from "react-router-dom";
 import { useState, useEffect} from "react";
 import { fs, auth } from "../pages/firebase"; 
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
 import LoadingSpinner from "./LoadingSpinner";
 import { toast } from "react-toastify"; 
+
 
 const Container = styled.div``;
 
@@ -22,7 +23,7 @@ const Title = styled.h2`
 
 const OrderDetails = () => {
   const { orderId } = useParams();
-  const [orderItems, setOrderItems] = useState([]);
+  const [order, setOrder] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const history = useHistory();
@@ -60,7 +61,7 @@ const OrderDetails = () => {
             id: doc.id,
             ...doc.data()
           }));
-          setOrderItems(items);
+          setOrder(items);
         }
       } else {
         setError("You do not have permission to view this order.");
