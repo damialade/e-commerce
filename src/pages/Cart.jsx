@@ -196,7 +196,8 @@ const addOrder = async () => {
           CreatedAt: new Date().toISOString(),
         });
         
-      } 
+      } catch(err){
+        console.error("Ordernot successfully placed" err)
     }
 
     toast.success("Order placed successfully.");
