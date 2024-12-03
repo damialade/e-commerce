@@ -169,6 +169,27 @@ const Cart = () => {
 
   const navigate = useHistory();
 
+  //add order function
+ const addOrder = async () => {
+  const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
+  const orderData = {
+    OrderPrice: TotalProductPrice,
+    OrderQuantity: totalQuantity,
+    OrderItems: cartProducts,
+    PaymentMethod: "Stripe/Card",
+    UserId: uid,
+  };
+
+  try {
+    await fs.collection("Orders").add(orderData);
+    toast.success("Order placed successfully.");
+  } catch (error) {
+    console.error("Error adding order:", error);
+    toast.error("Failed to place the order. Please try again.");
+  }
+};
+
+//clear cart function
   const deleteCart = () => {
     if (!cartProducts || cartProducts.length === 0) return;
      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
@@ -204,19 +225,8 @@ const Cart = () => {
     const { status } = response.data;
 
     if (status === "success") {
-      const uid = auth?.currentUser?.uid || localStorage.getItem("userId"); 
-      
-      // Add order to Firestore
-      // await fs.collection("Orders").add({
-      //   OrderPrice: TotalProductPrice,
-      //   OrderQuantity: totalQuantity,
-      //   UserId: uid,
-      //   OrderItems: cartProducts,
-      //   PaymentMethod: "Stripe/Card",
-      // });
-
-      // Clear cart
-      deleteCart();
+     addOrder(); // Add order to Firestore
+     deleteCart();// Clear cart
 
       // Redirect and notify
       toast.success("Your order has been placed successfully", {
@@ -259,6 +269,8 @@ const Cart = () => {
     });
   }
 };
+
+  
   //showing modal cash on delivery state
 
   // const [showModal, setShowModal] = useState(false);
