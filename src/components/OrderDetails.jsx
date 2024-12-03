@@ -28,63 +28,45 @@ const OrderDetails = () => {
   const [error, setError] = useState(null);
   const history = useHistory();
 
-  const getOrderItems = async () => {
+ const getOrderItems = async () => {
     try {
       const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
-
       if (!uid) {
         console.error("No user is logged in.");
         history.push("/login");
         return;
-      }
+      };
 
-      
-      const orderDoc = await fs
-        .collection("Orders") 
-        .doc(orderId) 
-        .get();
-
-  
-      if (orderDoc.exists && orderDoc.data().userId === uid) {
-        
-        const itemsSnapshot = await fs
+      const itemsSnapshot = await fs
           .collection("Orders")
           .doc(uid)
           .collection("Items")
           .doc(orderId)
           .get();
 
-        if (itemsSnapshot.empty) {
-          setError("No items found for this order.");
-        } else {
-          
-          const items = itemsSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data()
-          }));
-          setOrder(items);
-        }
-      } else {
-        setError("You do not have permission to view this order.");
-        history.push("/login"); 
-      }
+      const userOrderDetails = itemsSnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+
+      setOrders(userOrderDetails);
     } catch (error) {
-      console.error("Error fetching order items:", error);
-      setError("An error occurred while fetching the items.");
+      console.error("Error fetching user orders:", error);
+      toast.error("An error occurred while fetching the items.");
+      history.push("/login");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // Scroll to the top of the page when the component mounts
     window.scrollTo({
       top: 0,
       behavior: "smooth",
     });
+   getOrderItems();
+  }, []);
 
-    getOrderItems(); 
-  }, [orderId]); 
 
   if (loading) {
     return <LoadingSpinner />;
