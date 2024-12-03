@@ -187,7 +187,7 @@ const addOrder = async () => {
 
   try {
     const orderRef = await fs.collection("Orders").doc(uid).collection("Items").add(orderData);
-    console.log("Order added successfully:", orderRef.id);
+ 
     for (const item of cartProducts) {
       try {
         await orderRef.collection("Items").add({
@@ -195,7 +195,7 @@ const addOrder = async () => {
           OrderId: orderRef.id,
           CreatedAt: new Date().toISOString(),
         });
-        console.log("Item added successfully:", item);
+        
       } 
     }
 
