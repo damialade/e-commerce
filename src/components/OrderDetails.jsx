@@ -44,10 +44,15 @@ const OrderDetails = () => {
           .doc(orderId)
           .get();
 
-      const userOrderDetails = itemsSnapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
+         if (!itemsSnapshot.exists) {
+      toast.error("Order not found.");
+      return;
+    }
+
+       const userOrderDetails = {
+      id: itemsSnapshot.id,
+      ...itemsSnapshot.data(),
+    };
 
       setOrders(userOrderDetails);
     } catch (error) {
