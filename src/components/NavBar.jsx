@@ -12,7 +12,7 @@ import { useHistory } from "react-router-dom";
 
 const Container = styled.div`
   height: 80px;
-  ${mobile({ height: "70px" })}
+  ${mobile({ height: "60px" })}
 `;
 
 const Wrapper = styled.div`
@@ -20,18 +20,20 @@ const Wrapper = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  ${mobile({ padding: "10px 0" })}
+  ${mobile({ padding: "5px 10px" })}
 `;
 
 const Logo = styled.h1`
   font-weight: bold;
-  ${mobile({ fontSize: "24px" })}
+  font-size: 28px;
+  ${mobile({ fontSize: "20px" })}
 `;
 
 const Center = styled.div`
   flex: 1;
   text-align: left;
   margin-left: 20px;
+  ${mobile({ marginLeft: "10px" })}
 `;
 
 const Right = styled.div`
@@ -46,13 +48,17 @@ const MenuItem = styled.div`
   font-size: 14px;
   cursor: pointer;
   margin-left: 20px;
-  ${mobile({ fontSize: "10px", marginLeft: "12px" })}
+  ${mobile({ fontSize: "12px", marginLeft: "10px" })}
+`;
+
+const IconWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  ${mobile({ flexDirection: "row", justifyContent: "space-around" })}
 `;
 
 const NavBar = () => {
   const navigate = useHistory();
-
-  //getting current user id
 
   const GetUserId = () => {
     const [uid, setUid] = useState(null);
@@ -67,8 +73,6 @@ const NavBar = () => {
     return uid;
   };
   GetUserId();
-
-  //getting current user to display on navbar
 
   const GetCurrentUser = () => {
     const [user, setUser] = useState(null);
@@ -99,10 +103,8 @@ const NavBar = () => {
     });
   };
 
-  //state of cart products
   const [cartProducts, setCartProducts] = useState([]);
 
-  //getting cart products from firestore collection and updating state of cart
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
@@ -119,14 +121,12 @@ const NavBar = () => {
       } else {
         console.log("user is not signed in");
       }
-    });  
+    });
   }, []);
 
-  //state of cart products
   const [wishlistProducts, setWishListProducts] = useState([]);
 
-  //getting wishlist products from firestore collection and updating state of wishlist
- useEffect(() => {
+  useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
         fs.collection("Wishlist")
@@ -154,64 +154,43 @@ const NavBar = () => {
           </Link>
         </Center>
         <Right>
-          {user && (
+          {user ? (
             <>
-              <div style={{ textDecoration: "none", color: "grey" }}>
-                <MenuItem>{user}</MenuItem>
-              </div>
-
-              <Link
-                to="/account"
-                style={{ textDecoration: "none", color: "grey" }}
-              >
+              <MenuItem>{user}</MenuItem>
+              <Link to="/account" style={{ textDecoration: "none", color: "grey" }}>
                 <MenuItem>My Account</MenuItem>
               </Link>
               <MenuItem onClick={handleLogout}>Logout</MenuItem>
 
-              {wishlistProducts.length > 0 && (
-                <Link
-                  to="/wishlist"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <MenuItem>
-                    <Badge
-                      badgeContent={wishlistProducts.length}
-                      color="success"
-                    >
-                      <FavoriteBorderOutlined />
-                    </Badge>
-                  </MenuItem>
-                </Link>
-              )}
+              <IconWrapper>
+                {wishlistProducts.length > 0 && (
+                  <Link to="/wishlist" style={{ textDecoration: "none", color: "black" }}>
+                    <MenuItem>
+                      <Badge badgeContent={wishlistProducts.length} color="success">
+                        <FavoriteBorderOutlined />
+                      </Badge>
+                    </MenuItem>
+                  </Link>
+                )}
 
-              {cartProducts.length > 0 && (
-                <Link
-                  to="/cart"
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <MenuItem>
-                    <Badge badgeContent={cartProducts.length} color="success">
-                      <ShoppingCartOutlined />
-                    </Badge>
-                  </MenuItem>
-                </Link>
-              )}
+                {cartProducts.length > 0 && (
+                  <Link to="/cart" style={{ textDecoration: "none", color: "black" }}>
+                    <MenuItem>
+                      <Badge badgeContent={cartProducts.length} color="success">
+                        <ShoppingCartOutlined />
+                      </Badge>
+                    </MenuItem>
+                  </Link>
+                )}
+              </IconWrapper>
             </>
-          )}
-
-          {!user && (
+          ) : (
             <>
-              <Link
-                to="/register"
-                style={{ textDecoration: "none", color: "grey" }}
-              >
+              <Link to="/register" style={{ textDecoration: "none", color: "grey" }}>
                 <MenuItem>Register</MenuItem>
               </Link>
 
-              <Link
-                to="/login"
-                style={{ textDecoration: "none", color: "grey" }}
-              >
+              <Link to="/login" style={{ textDecoration: "none", color: "grey" }}>
                 <MenuItem>Login</MenuItem>
               </Link>
             </>
