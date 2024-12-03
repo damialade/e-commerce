@@ -173,13 +173,14 @@ const Cart = () => {
     if (!cartProducts || cartProducts.length === 0) return;
      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
     try {
-    cartProducts.forEach((cartProduct) => {
+    const deletePromises = cartProducts.map((cartProduct) => 
       fs.collection("Cart")
         .doc(uid)
         .collection("Items")
         .doc(cartProduct.ID)
     .delete();
-    });
+  );  
+      await Promise.all(deletePromises);
      toast.success("Cart cleared successfully.");
   } catch (error) {
      toast.error("Error deleting cart items:", error);
@@ -289,6 +290,7 @@ const Cart = () => {
             )}
           </TopTexts>
           <div>
+             {cartProducts.length > 0 && (
             <StripeCheckout
               stripeKey="pk_test_51KGRP6EVzyUnSBi9XFfZSbOyBlp6bxDi470qqy0rON2MVmH322KgZOsa8xNeURp09bV098TUebGfyoI8BuHqudpc00mYmz4ZXS"
               token={handleToken}
@@ -297,10 +299,11 @@ const Cart = () => {
               name="All Products"
               amount={TotalProductPrice * 100}
             >
-              {cartProducts.length > 0 && (
+             
               <TopButton type="filled">MAKE PAYMENT</TopButton>
-              )}
+             
             </StripeCheckout>
+      )}
           </div>
         </Top>
 
