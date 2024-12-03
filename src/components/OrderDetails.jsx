@@ -49,8 +49,9 @@ const OrderDetails = () => {
         
         const itemsSnapshot = await fs
           .collection("Orders")
-          .doc(orderId)
+          .doc(uid)
           .collection("Items")
+          .doc(orderId)
           .get();
 
         if (itemsSnapshot.empty) {
