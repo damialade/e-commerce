@@ -165,13 +165,15 @@ const Cart = () => {
 
   let deliveryFee = "FREE";
 
-  //charging payment
-
   const navigate = useHistory();
 
   //add order function
  const addOrder = async () => {
   const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
+   if (!uid || uid = "null") {
+    toast.error("User is not authenticated.");
+    return;
+  }
   const orderData = {
     OrderPrice: TotalProductPrice,
     OrderQuantity: totalQuantity,
