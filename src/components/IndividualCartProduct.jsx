@@ -111,12 +111,20 @@ const IndividualCartProduct = ({ cartProduct }) => {
   };
 
   const deleteProduct = (ProdID) => {
-    const uid = auth.currentUser.uid || localStorage.getItem("userId");
+  const user = auth.currentUser;
+  const uid = user ? user.uid : localStorage.getItem("userId");
 
-    if (uid) {
-      fs.collection("Cart").doc(uid).collection("Items").doc(ProdID).delete();
-    }
+  if (!uid) {
+    console.error("No user ID found. Cannot delete product.");
+    return;
   };
+  if (!ProdID) {
+    console.error("No product ID provided. Cannot delete product.");
+    return;
+  };
+  fs.collection("Cart").doc(uid).collection("Items").doc(ProdID).delete()
+};
+
 
   return (
     <Container>
