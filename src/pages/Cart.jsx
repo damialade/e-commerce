@@ -207,13 +207,13 @@ const Cart = () => {
       const uid = auth?.currentUser?.uid || localStorage.getItem("userId"); 
       
       // Add order to Firestore
-      await fs.collection("Orders").add({
-        OrderPrice: TotalProductPrice,
-        OrderQuantity: totalQuantity,
-        UserId: uid,
-        OrderItems: cartProducts,
-        PaymentMethod: "Stripe/Card",
-      });
+      // await fs.collection("Orders").add({
+      //   OrderPrice: TotalProductPrice,
+      //   OrderQuantity: totalQuantity,
+      //   UserId: uid,
+      //   OrderItems: cartProducts,
+      //   PaymentMethod: "Stripe/Card",
+      // });
 
       // Clear cart
       deleteCart();
