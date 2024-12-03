@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect} from "react";
 import { fs, auth } from "../pages/firebase"; 
 import styled from "styled-components";
 import OrderItem from "./OrderItem";
@@ -22,59 +22,67 @@ const Title = styled.h2`
 
 const OrderDetails = () => {
   const { orderId } = useParams();
+  const [orderItems, setOrderItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const history = useHistory();
 
-  const [order, setOrder] = useState(null); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState(null); 
-  const [isAuthenticated, setIsAuthenticated] = useState(false); 
-
-  // Ensure Firebase is initialized and user is authenticated before fetching order details
-  const fetchOrderDetails = useCallback(async () => {
+  const getOrderItems = async () => {
     try {
-      setLoading(true);
-      const user = auth.currentUser;
+      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
 
-      // If not authenticated, display error and stop
-      if (!user) {
-        setError("You need to be logged in to view order details.");
-        toast.error("Please log in to view your orders.");
-        setLoading(false);
+      if (!uid) {
+        console.error("No user is logged in.");
+        history.push("/login");
         return;
       }
 
-      // Firebase fetch logic to get order data
-      const orderDoc = await fs.collection("Orders").doc(orderId).get();
+      
+      const orderDoc = await fs
+        .collection("Orders") 
+        .doc(orderId) 
+        .get();
 
-      if (!orderDoc.exists) {
-        setError("Order not found.");
+  
+      if (orderDoc.exists && orderDoc.data().userId === uid) {
+        
+        const itemsSnapshot = await fs
+          .collection("Orders")
+          .doc(orderId)
+          .collection("Items")
+          .get();
+
+        if (itemsSnapshot.empty) {
+          setError("No items found for this order.");
+        } else {
+          
+          const items = itemsSnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+          }));
+          setOrderItems(items);
+        }
       } else {
-        setOrder(orderDoc.data());
+        setError("You do not have permission to view this order.");
+        history.push("/login"); 
       }
-    } catch (err) {
-      console.error("Error fetching order details:", err);
-      setError("An error occurred while fetching order details.");
+    } catch (error) {
+      console.error("Error fetching order items:", error);
+      setError("An error occurred while fetching the items.");
     } finally {
       setLoading(false);
     }
-  }, [orderId]);
+  };
 
   useEffect(() => {
-    // Listen for authentication state change
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      if (user) {
-        setIsAuthenticated(true); 
-      } else {
-        setIsAuthenticated(false);
-      }
+    // Scroll to the top of the page when the component mounts
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
     });
 
-    
-    if (isAuthenticated) {
-      fetchOrderDetails();
-    }
-
-    return () => unsubscribe(); 
-  }, [isAuthenticated, fetchOrderDetails]);
+    getOrderItems(); 
+  }, [orderId]); 
 
   if (loading) {
     return <LoadingSpinner />;
