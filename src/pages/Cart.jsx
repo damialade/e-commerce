@@ -173,14 +173,14 @@ const Cart = () => {
     if (!cartProducts || cartProducts.length === 0) return;
      const uid = auth?.currentUser?.uid || localStorage.getItem("userId");
     try {
-    const deletePromises = cartProducts.map((cartProduct) => {
+    cartProducts.map((cartProduct) => {
       fs.collection("Cart")
         .doc(uid)
         .collection("Items")
         .doc(cartProduct.ID)
     .delete();
     });  
-      await Promise.all(deletePromises);
+     
      toast.success("Cart cleared successfully.");
   } catch (error) {
      toast.error("Error deleting cart items:", error);
